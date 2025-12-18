@@ -41,10 +41,7 @@ const LandingPage = () => {
 
                     {/* Left Text Content */}
                     <div className="space-y-6 max-w-2xl z-10">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-gray-300 text-xs font-bold uppercase tracking-widest shadow-lg">
-                            <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
-                            Official Hospitality Partners
-                        </div>
+
                         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight leading-tight drop-shadow-lg">
                             Experience <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-200">FIFA World Cup 2026™</span>
