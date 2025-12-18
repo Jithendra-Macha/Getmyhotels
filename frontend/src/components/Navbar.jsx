@@ -21,6 +21,7 @@ const Navbar = () => {
                             <Link to="/bookings" className="hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">My Bookings</Link>
                             <Link to="/support" className="hover:text-primary px-3 py-2 rounded-md text-sm font-semibold transition-colors">Customer Support</Link>
                             <div className="flex items-center gap-4 ml-4">
+                                <Link to="/signup" className="text-gray-900 hover:text-purple-600 px-3 py-2 rounded-md text-sm font-bold transition-colors">Register</Link>
                                 <Link to="/login" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 px-6 py-2.5 rounded-full text-sm font-bold shadow-md transition-all transform hover:scale-105">Sign In</Link>
                             </div>
                         </div>
@@ -54,7 +55,10 @@ const Navbar = () => {
                         <Link to="/" className="hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium text-gray-900">Home</Link>
                         <Link to="/bookings" className="hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium text-gray-900">My Bookings</Link>
                         <Link to="/support" className="hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium text-gray-900">Customer Support</Link>
-                        <Link to="/login" className="bg-primary text-white hover:bg-primary/90 block px-3 py-2 rounded-md text-base font-bold mt-4 text-center mx-2">Sign In</Link>
+                        <div className="mt-4 flex flex-col gap-2 px-2">
+                            <Link to="/signup" className="block text-center w-full px-4 py-2 border border-purple-600 text-purple-600 rounded-md font-bold hover:bg-purple-50">Register</Link>
+                            <Link to="/login" className="block text-center w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 px-4 py-2 rounded-md font-bold">Sign In</Link>
+                        </div>
                     </div>
                 </div>
             )}
