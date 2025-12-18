@@ -110,16 +110,34 @@ const HeroSearch = () => {
                     font-family: inherit; 
                     border-radius: 0.75rem; 
                     border: none; 
-                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-                    z-index: 9999 !important;
+                    box-shadow: none; /* Shadow handled by container */
+                    display: flex !important; /* Force side-by-side */
                 }
-                .react-datepicker__header { background-color: #f3f4f6; border-bottom: 1px solid #e5e7eb; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; }
-                .react-datepicker__day--selected, .react-datepicker__day--in-selecting-range, .react-datepicker__day--in-range {
-                    background-color: #7c3aed !important;
+                .react-datepicker__month-container {
+                    float: left;
+                    background: white;
+                }
+                .react-datepicker__header { background-color: #f8fafc; border-bottom: none; padding-top: 1rem; }
+                
+                /* Selected Date Gradient - Matches Sign In Button */
+                .react-datepicker__day--selected, 
+                .react-datepicker__day--in-selecting-range, 
+                .react-datepicker__day--in-range {
+                    background: linear-gradient(to right, #2563eb, #9333ea) !important; /* blue-600 to purple-600 */
                     color: white !important;
+                    border-radius: 9999px; /* Rounded pills */
                 }
-                .react-datepicker__day--keyboard-selected { background-color: #8b5cf6 !important; }
-                .react-datepicker__day:hover { background-color: #ede9fe !important; }
+                .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) {
+                    background-color: rgba(147, 51, 234, 0.5) !important; 
+                }
+                .react-datepicker__day--keyboard-selected { background-color: transparent !important; color: inherit !important; }
+                .react-datepicker__day:hover { background-color: #f3f4f6 !important; border-radius: 9999px; }
+                
+                /* Navigation Arrows */
+                .react-datepicker__navigation { top: 15px; }
+                .react-datepicker__day-name { color: #64748b; font-weight: 600; width: 2.5rem; line-height: 2.5rem; margin: 0.1rem;}
+                .react-datepicker__day { width: 2.5rem; line-height: 2.5rem; margin: 0.1rem; }
+                .react-datepicker__current-month { font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
             `}</style>
 
             {/* Category Navigation - Minimal & Clean */}
@@ -267,10 +285,10 @@ const HeroSearch = () => {
                                                         <button
                                                             key={idx}
                                                             type="button"
-                                                            onClick={() => handleQuickSelect(opt.val)} // Note: Logic might need refinement for flexible search intent, but keeping simple for UI
-                                                            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${(quickSelectDays === opt.val)
-                                                                    ? 'border-blue-600 bg-blue-50 text-blue-700'
-                                                                    : 'border-gray-300 text-gray-600 hover:border-gray-400'
+                                                            onClick={() => handleQuickSelect(opt.val)} 
+                                                            className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${(quickSelectDays === opt.val)
+                                                                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white border-transparent shadow-md'
+                                                                : 'border-gray-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50'
                                                                 }`}
                                                         >
                                                             {opt.label}
@@ -282,7 +300,7 @@ const HeroSearch = () => {
                                                 <button
                                                     type="button"
                                                     onClick={() => dpRef.current.setOpen(false)}
-                                                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-sm text-sm transition-all"
+                                                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transform transition-all active:scale-95 text-sm"
                                                 >
                                                     Done
                                                 </button>
