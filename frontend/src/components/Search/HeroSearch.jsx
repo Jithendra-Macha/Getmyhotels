@@ -298,12 +298,18 @@ const HeroSearch = () => {
                                     startDate={startDate}
                                     endDate={endDate}
                                     onChange={(update) => {
-                                        const [start, end] = update;
-                                        // Enforce 1 night minimum stay
-                                        if (start && end && start.getTime() === end.getTime()) {
-                                            setDateRange([start, null]); // Reset end date if same as start
-                                        } else {
-                                            setDateRange(update);
+                                        try {
+                                            const [start, end] = update;
+
+                                            // Safely check for 1 night minimum
+                                            if (start instanceof Date && end instanceof Date && !isNaN(start) && !isNaN(end) && start.getTime() === end.getTime()) {
+                                                setDateRange([start, null]); // Start over if same day selected
+                                            } else {
+                                                setDateRange(update);
+                                            }
+                                        } catch (error) {
+                                            console.error("Date selection error:", error);
+                                            setDateRange(update); // Fallback to standard behavior
                                         }
                                         setQuickSelectDays(null);
                                     }}
@@ -315,7 +321,11 @@ const HeroSearch = () => {
                                     dateFormat="MMM d, yyyy"
                                     calendarClassName="booking-calendar"
                                     calendarContainer={({ className, children }) => (
-                                        <div className="bg-white shadow-2xl rounded-2xl border border-gray-100 overflow-hidden flex flex-col font-sans" style={{ minWidth: '700px' }}>
+                                        <div
+                                            className="bg-white shadow-2xl rounded-2xl border border-gray-100 overflow-hidden flex flex-col font-sans"
+                                            style={{ minWidth: '700px' }}
+                                            onMouseDown={(e) => e.stopPropagation()}
+                                        >
 
                                             {/* Header: Selected Dates Display */}
                                             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
