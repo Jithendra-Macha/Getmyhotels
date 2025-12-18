@@ -183,7 +183,7 @@ const HeroSearch = () => {
                                     onChange={(e) => setValue(e.target.value)}
                                     disabled={!ready}
                                     className="block w-full pl-10 pr-3 py-4 bg-transparent border-none focus:ring-0 text-gray-900 font-semibold placeholder-gray-500"
-                                    placeholder="Enter city, hotel, airport..."
+                                    placeholder="Enter the city, Airport..."
                                 />
                                 {/* Suggestions Dropdown */}
                                 {status === "OK" && (
@@ -235,7 +235,7 @@ const HeroSearch = () => {
                                     minDate={new Date()}
                                     className="w-full bg-transparent border-none focus:ring-0 text-gray-900 font-semibold placeholder-gray-500"
                                     placeholderText="Check-in - Check-out"
-                                    dateFormat="MMM d"
+                                    dateFormat="MMM d, yyyy"
                                     calendarClassName="booking-calendar"
                                 >
                                     <div className="calendar-tabs">
