@@ -286,11 +286,11 @@ const HeroSearch = () => {
                                             7 days
                                         </button>
                                     </div>
-                                    <div className="p-3 border-t border-gray-100 flex justify-end">
+                                    <div className="flex items-center justify-end p-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
                                         <button
                                             type="button"
                                             onClick={() => dpRef.current.setOpen(false)}
-                                            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg shadow-md hover:shadow-lg transform active:scale-95 transition-all text-sm"
+                                            className="px-8 py-2.5 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-lg shadow-md transition-all text-sm uppercase tracking-wider"
                                         >
                                             Done
                                         </button>
