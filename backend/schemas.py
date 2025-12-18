@@ -1,0 +1,81 @@
+from pydantic import BaseModel
+from typing import List, Optional
+
+class UserBase(BaseModel):
+    email: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    phone_number: Optional[str] = None
+
+class UserCreate(UserBase):
+    password: Optional[str] = None
+    provider: str = "local"
+    is_guest: bool = False
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
+
+class HotelBase(BaseModel):
+    name: str
+    location: str
+    description: str
+    rating: float
+    image_url: str
+    price_per_night: float
+
+class HotelCreate(HotelBase):
+    pass
+
+class Hotel(HotelBase):
+    id: int
+    
+    class Config:
+        orm_mode = True
+
+class RoomBase(BaseModel):
+    name: str
+    capacity: int
+    price: float
+    available: bool
+
+class RoomCreate(RoomBase):
+    pass
+
+class Room(RoomBase):
+    id: int
+    hotel_id: int
+
+    class Config:
+        orm_mode = True
+
+class BookingBase(BaseModel):
+    check_in_date: str
+    check_out_date: str
+    guest_name: str
+    guest_email: str
+
+class BookingCreate(BookingBase):
+    room_id: int
+
+class Booking(BookingBase):
+    id: int
+    user_id: Optional[int] = None
+    room_id: int
+    total_price: float
+
+    class Config:
+        orm_mode = True
+
+class HotelDetail(Hotel):
+    rooms: List[Room] = []
+
+class AIPlanRequest(BaseModel):
+    prompt: str
