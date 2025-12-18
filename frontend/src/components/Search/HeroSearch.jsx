@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
@@ -9,6 +9,7 @@ const HeroSearch = () => {
 
     const [searchType, setSearchType] = useState('traditional');
     const [activeCategory, setActiveCategory] = useState('stays');
+    const dpRef = useRef(null);
 
     // Date Picker State
     const [dateRange, setDateRange] = useState([null, null]);
@@ -223,6 +224,7 @@ const HeroSearch = () => {
                                     </svg>
                                 </div>
                                 <DatePicker
+                                    ref={dpRef}
                                     selectsRange={true}
                                     startDate={startDate}
                                     endDate={endDate}
@@ -282,6 +284,15 @@ const HeroSearch = () => {
                                             type="button"
                                         >
                                             7 days
+                                        </button>
+                                    </div>
+                                    <div className="p-3 border-t border-gray-100 flex justify-end">
+                                        <button
+                                            type="button"
+                                            onClick={() => dpRef.current.setOpen(false)}
+                                            className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-lg shadow-md hover:shadow-lg transform active:scale-95 transition-all text-sm"
+                                        >
+                                            Done
                                         </button>
                                     </div>
                                 </DatePicker>
