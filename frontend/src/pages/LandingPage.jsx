@@ -24,7 +24,7 @@ const LandingPage = () => {
             {/* Navbar rendered in App.jsx */}
 
             {/* Hero Section - FIFA 2026 Theme */}
-            <div className="relative bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 pb-28 sm:pb-36 overflow-hidden">
+            <div className="relative bg-gradient-to-br from-gray-900 via-slate-900 to-black pb-28 sm:pb-36 overflow-hidden">
                 {/* Abstract Background pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -41,7 +41,7 @@ const LandingPage = () => {
 
                     {/* Left Text Content */}
                     <div className="space-y-6 max-w-2xl z-10">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-blue-100 text-xs font-bold uppercase tracking-widest shadow-lg">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-gray-300 text-xs font-bold uppercase tracking-widest shadow-lg">
                             <span className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
                             Official Hospitality Partners
                         </div>
@@ -49,7 +49,7 @@ const LandingPage = () => {
                             Experience <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-200">FIFA World Cup 2026™</span>
                         </h1>
-                        <p className="text-lg sm:text-xl text-blue-100 max-w-lg leading-relaxed shadow-black drop-shadow-md">
+                        <p className="text-lg sm:text-xl text-gray-300 max-w-lg leading-relaxed shadow-black drop-shadow-md">
                             Book your stay for the biggest sporting event in history. Exclusive hotels across USA, Canada, and Mexico.
                         </p>
                         <div className="flex flex-wrap gap-4 pt-2 justify-center sm:justify-start">
