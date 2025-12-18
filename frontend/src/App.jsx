@@ -21,7 +21,7 @@ const libraries = ['places'];
 function App() {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyBGbdooIK0JWevSX2nV2ICE1kVgfRgEINg",
+    googleMapsApiKey: "AIzaSyCyClX-enj-iqwrsMpHMravX2q0-OkvOL4",
     libraries
   });
 

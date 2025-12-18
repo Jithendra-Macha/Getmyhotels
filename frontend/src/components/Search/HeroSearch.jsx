@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
+import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
+import useOnclickOutside from "react-cool-onclickoutside";
 import "react-datepicker/dist/react-datepicker.css";
 import "/src/styles/custom-datepicker.css";
 
@@ -18,6 +20,39 @@ const HeroSearch = () => {
     const [aiPrompt, setAiPrompt] = useState('');
     const [aiResult, setAiResult] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    // Google Places Autocomplete
+    const {
+        ready,
+        value,
+        suggestions: { status, data },
+        setValue,
+        clearSuggestions,
+    } = usePlacesAutocomplete({
+        requestOptions: {
+            /* Removing 'types' restriction to show EVERYTHING (Boroughs, Cities, Areas) */
+        },
+        debounce: 300,
+    });
+
+    const ref = useOnclickOutside(() => {
+        // When user clicks outside of the component, we can dismiss
+        // the search suggestions by calling this method
+        clearSuggestions();
+    });
+
+    const handleSelect = ({ description }) => () => {
+        // When user selects a place, we can replace the keyword without request data from API
+        // by setting the second parameter to "false"
+        setValue(description, false);
+        clearSuggestions();
+
+        // Get latitude and longitude via utility functions
+        getGeocode({ address: description }).then((results) => {
+            const { lat, lng } = getLatLng(results[0]);
+            console.log("📍 Coordinates: ", { lat, lng });
+        });
+    };
 
     // Quick date selection handler
     const handleQuickSelect = (days) => {
@@ -103,7 +138,9 @@ const HeroSearch = () => {
                 ))}
             </div>
 
-            <div className="bg-white rounded-xl shadow-2xl overflow-hidden border border-gray-100">
+            {/* Main Search Container - Removed overflow-hidden to allow dropdowns to show */}
+            <div className="bg-white rounded-xl shadow-2xl border border-gray-100">
+                {console.log("Places API Status:", status, "Data:", data)}
                 {/* Search Type Tabs (Traditional vs AI) */}
                 <div className="flex border-b border-gray-200 bg-gray-50/50">
                     <button
@@ -132,8 +169,8 @@ const HeroSearch = () => {
                 <div className="p-4 sm:p-6 bg-white border border-gray-200 rounded-b-lg">
                     {searchType === 'traditional' ? (
                         <div className="flex flex-col lg:flex-row gap-2">
-                            {/* Location */}
-                            <div className="flex-grow-[2] bg-gray-50 rounded-md hover:bg-gray-100 transition-colors relative group">
+                            {/* Location - Places Autocomplete */}
+                            <div className="flex-grow-[2] bg-gray-50 rounded-md hover:bg-gray-100 transition-colors relative group" ref={ref}>
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <svg className="h-5 w-5 text-gray-500 group-hover:text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -142,9 +179,40 @@ const HeroSearch = () => {
                                 </div>
                                 <input
                                     type="text"
+                                    value={value}
+                                    onChange={(e) => setValue(e.target.value)}
+                                    disabled={!ready}
                                     className="block w-full pl-10 pr-3 py-4 bg-transparent border-none focus:ring-0 text-gray-900 font-semibold placeholder-gray-500"
                                     placeholder="Enter city, hotel, airport..."
                                 />
+                                {/* Suggestions Dropdown */}
+                                {status === "OK" && (
+                                    <div className="absolute top-full left-0 w-full bg-white rounded-lg shadow-xl mt-2 overflow-hidden z-[100] border border-gray-100">
+                                        {data.map((suggestion) => {
+                                            const {
+                                                place_id,
+                                                structured_formatting: { main_text, secondary_text },
+                                            } = suggestion;
+
+                                            return (
+                                                <div
+                                                    key={place_id}
+                                                    onClick={handleSelect(suggestion)}
+                                                    className="px-4 py-3 hover:bg-purple-50 cursor-pointer flex items-center transition-colors border-b border-gray-50 last:border-none"
+                                                >
+                                                    <svg className="w-4 h-4 text-gray-400 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    </svg>
+                                                    <div>
+                                                        <p className="text-sm font-bold text-gray-900">{main_text}</p>
+                                                        <p className="text-xs text-gray-500">{secondary_text}</p>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
                             </div>
 
                             {/* Dates - With DatePicker */}
