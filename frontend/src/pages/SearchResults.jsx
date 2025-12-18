@@ -35,7 +35,7 @@ const SearchResults = () => {
             setError(null);
             try {
                 // Construct API URL with query parameters
-                let apiUrl = 'http://localhost:8000/hotels';
+                let apiUrl = 'https://getmyhotels-com.onrender.com/hotels';
                 const params = new URLSearchParams();
 
                 // Default dates if missing

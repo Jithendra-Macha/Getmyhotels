@@ -12,7 +12,7 @@ const HotelDetails = () => {
         const fetchHotelDetails = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`http://localhost:8000/hotels/${id}`);
+                const response = await fetch(`https://getmyhotels-com.onrender.com/hotels/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch hotel details');
                 }

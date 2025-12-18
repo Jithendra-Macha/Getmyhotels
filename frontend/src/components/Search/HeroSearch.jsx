@@ -40,7 +40,7 @@ const HeroSearch = () => {
         setLoading(true);
         setAiResult(null);
         try {
-            const response = await fetch('http://localhost:8000/ai-plan', {
+            const response = await fetch('https://getmyhotels-com.onrender.com/ai-plan', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prompt: aiPrompt })

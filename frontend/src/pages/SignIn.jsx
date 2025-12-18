@@ -23,7 +23,7 @@ const SignIn = () => {
             formDataBody.append('username', formData.email);
             formDataBody.append('password', formData.password);
 
-            const response = await fetch('http://localhost:8000/login', {
+            const response = await fetch('https://getmyhotels-com.onrender.com/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
@@ -46,7 +46,7 @@ const SignIn = () => {
 
     const handleGuestLogin = async () => {
         try {
-            const response = await fetch('http://localhost:8000/guest-login', {
+            const response = await fetch('https://getmyhotels-com.onrender.com/guest-login', {
                 method: 'POST',
             });
             const data = await response.json();
