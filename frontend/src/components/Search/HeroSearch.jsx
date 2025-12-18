@@ -298,7 +298,13 @@ const HeroSearch = () => {
                                     startDate={startDate}
                                     endDate={endDate}
                                     onChange={(update) => {
-                                        setDateRange(update);
+                                        const [start, end] = update;
+                                        // Enforce 1 night minimum stay
+                                        if (start && end && start.getTime() === end.getTime()) {
+                                            setDateRange([start, null]); // Reset end date if same as start
+                                        } else {
+                                            setDateRange(update);
+                                        }
                                         setQuickSelectDays(null);
                                     }}
                                     withPortal
