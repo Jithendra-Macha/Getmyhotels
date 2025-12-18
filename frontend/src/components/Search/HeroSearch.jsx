@@ -106,26 +106,33 @@ const HeroSearch = () => {
                 }
                 .react-datepicker__input-container input:focus { outline: none; box-shadow: none; }
                 .react-datepicker-popper { z-index: 9999 !important; }
+                
+                /* FORCE SIDE-BY-SIDE LAYOUT */
                 .react-datepicker { 
                     font-family: inherit; 
-                    border-radius: 0.75rem; 
+                    border-radius: 0; 
                     border: none; 
-                    box-shadow: none; /* Shadow handled by container */
-                    display: flex !important; /* Force side-by-side */
+                    box-shadow: none; 
+                    display: flex !important; /* Critical */
+                    flex-direction: row !important;
                 }
                 .react-datepicker__month-container {
-                    float: left;
+                    float: none !important;
+                    display: flex !important;
+                    flex-direction: column !important;
                     background: white;
+                    width: 330px; /* Force minimum width to prevent stacking */
                 }
-                .react-datepicker__header { background-color: #f8fafc; border-bottom: none; padding-top: 1rem; }
+
+                .react-datepicker__header { background-color: white; border-bottom: none; padding-top: 1rem; }
                 
-                /* Selected Date Gradient - Matches Sign In Button */
+                /* Selected Date Gradient */
                 .react-datepicker__day--selected, 
                 .react-datepicker__day--in-selecting-range, 
                 .react-datepicker__day--in-range {
-                    background: linear-gradient(to right, #2563eb, #9333ea) !important; /* blue-600 to purple-600 */
+                    background: linear-gradient(to right, #2563eb, #9333ea) !important;
                     color: white !important;
-                    border-radius: 9999px; /* Rounded pills */
+                    border-radius: 9999px;
                 }
                 .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) {
                     background-color: rgba(147, 51, 234, 0.5) !important; 
@@ -133,11 +140,13 @@ const HeroSearch = () => {
                 .react-datepicker__day--keyboard-selected { background-color: transparent !important; color: inherit !important; }
                 .react-datepicker__day:hover { background-color: #f3f4f6 !important; border-radius: 9999px; }
                 
-                /* Navigation Arrows */
-                .react-datepicker__navigation { top: 15px; }
+                .react-datepicker__navigation { top: 20px; }
+                .react-datepicker__navigation--previous { left: 10px; }
+                .react-datepicker__navigation--next { right: 10px; }
+                
                 .react-datepicker__day-name { color: #64748b; font-weight: 600; width: 2.5rem; line-height: 2.5rem; margin: 0.1rem;}
                 .react-datepicker__day { width: 2.5rem; line-height: 2.5rem; margin: 0.1rem; }
-                .react-datepicker__current-month { font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem; }
+                .react-datepicker__current-month { font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 1rem; }
             `}</style>
 
             {/* Category Navigation - Minimal & Clean */}
@@ -285,7 +294,7 @@ const HeroSearch = () => {
                                                         <button
                                                             key={idx}
                                                             type="button"
-                                                            onClick={() => handleQuickSelect(opt.val)} 
+                                                            onClick={() => handleQuickSelect(opt.val)}
                                                             className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${(quickSelectDays === opt.val)
                                                                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white border-transparent shadow-md'
                                                                 : 'border-gray-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50'
