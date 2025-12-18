@@ -5,7 +5,7 @@ import SocialLoginButtons from '../components/SocialLoginButtons';
 const SignIn = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        email: '',
+        identifier: '',
         password: ''
     });
     const [error, setError] = useState('');
@@ -20,7 +20,7 @@ const SignIn = () => {
 
         try {
             const formDataBody = new URLSearchParams();
-            formDataBody.append('username', formData.email);
+            formDataBody.append('username', formData.identifier);
             formDataBody.append('password', formData.password);
 
             const response = await fetch('https://getmyhotels-com.onrender.com/login', {
@@ -37,7 +37,7 @@ const SignIn = () => {
                 localStorage.setItem('token', data.access_token);
                 navigate('/');
             } else {
-                setError('Invalid email or password');
+                setError('Invalid credentials');
             }
         } catch (err) {
             setError('An error occurred. Please try again.');
@@ -79,18 +79,17 @@ const SignIn = () => {
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                                Email address
+                            <label htmlFor="identifier" className="block text-sm font-medium text-gray-700">
+                                Email address or Phone Number
                             </label>
                             <div className="mt-1">
                                 <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    autoComplete="email"
+                                    id="identifier"
+                                    name="identifier"
+                                    type="text"
                                     required
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"
-                                    value={formData.email}
+                                    value={formData.identifier}
                                     onChange={handleChange}
                                 />
                             </div>
