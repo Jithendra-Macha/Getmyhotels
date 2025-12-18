@@ -105,48 +105,90 @@ const HeroSearch = () => {
                     padding: 1rem 0.75rem 1rem 2.5rem;
                 }
                 .react-datepicker__input-container input:focus { outline: none; box-shadow: none; }
-                .react-datepicker-popper { z-index: 9999 !important; }
+                .react-datepicker-popper { 
+                    z-index: 9999 !important; 
+                    padding-top: 10px; /* Spacing */
+                }
                 
-                /* FORCE SIDE-BY-SIDE LAYOUT */
+                /* Layout: Force Flex Row */
                 .react-datepicker { 
                     font-family: inherit; 
-                    border-radius: 0; 
                     border: none; 
-                    box-shadow: none; 
-                    display: flex !important; /* Critical */
+                    background-color: transparent;
+                    display: flex !important;
                     flex-direction: row !important;
                 }
+                
+                /* Month Container */
                 .react-datepicker__month-container {
                     float: none !important;
-                    display: flex !important;
-                    flex-direction: column !important;
                     background: white;
-                    width: 330px; /* Force minimum width to prevent stacking */
+                    width: 330px; /* Fixed width per month */
+                    margin: 0 10px;
+                    display: block !important; /* Reset flex col from previous attempts if any */
                 }
 
-                .react-datepicker__header { background-color: white; border-bottom: none; padding-top: 1rem; }
-                
+                .react-datepicker__header { 
+                    background-color: white; 
+                    border-bottom: none; 
+                    padding-top: 1.5rem; 
+                    position: relative;
+                }
+
+                /* Weekdays (Su, Mo, Tu...) */
+                .react-datepicker__day-name { 
+                    color: #64748b; 
+                    font-weight: 600; 
+                    width: 2.5rem; 
+                    line-height: 2.5rem;
+                    margin: 0.166rem; /* Align with days */
+                    text-transform: uppercase;
+                    font-size: 0.75rem;
+                }
+
+                /* Days */
+                .react-datepicker__day { 
+                    width: 2.5rem; 
+                    line-height: 2.5rem; 
+                    margin: 0.166rem;
+                    font-weight: 500;
+                    color: #1e293b;
+                }
+
                 /* Selected Date Gradient */
                 .react-datepicker__day--selected, 
                 .react-datepicker__day--in-selecting-range, 
                 .react-datepicker__day--in-range {
                     background: linear-gradient(to right, #2563eb, #9333ea) !important;
                     color: white !important;
-                    border-radius: 9999px;
+                    border-radius: 9999px; /* Circle/Pill */
                 }
                 .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) {
-                    background-color: rgba(147, 51, 234, 0.5) !important; 
+                    background-color: rgba(147, 51, 234, 0.1) !important; 
+                    color: #1e293b !important; /* Keep text dark in range */
+                    border-radius: 9999px;
                 }
+                .react-datepicker__day--range-start,
+                .react-datepicker__day--range-end {
+                    background: linear-gradient(to right, #2563eb, #9333ea) !important;
+                    color: white !important;
+                }
+
                 .react-datepicker__day--keyboard-selected { background-color: transparent !important; color: inherit !important; }
                 .react-datepicker__day:hover { background-color: #f3f4f6 !important; border-radius: 9999px; }
+                .react-datepicker__day--disabled { color: #cbd5e1 !important; pointer-events: none; }
+
+                /* Navigation Arrows - Custom Positioning to align with Month Title */
+                .react-datepicker__navigation { top: 25px; }
+                .react-datepicker__navigation--previous { left: 20px; }
+                .react-datepicker__navigation--next { right: 20px; }
                 
-                .react-datepicker__navigation { top: 20px; }
-                .react-datepicker__navigation--previous { left: 10px; }
-                .react-datepicker__navigation--next { right: 10px; }
-                
-                .react-datepicker__day-name { color: #64748b; font-weight: 600; width: 2.5rem; line-height: 2.5rem; margin: 0.1rem;}
-                .react-datepicker__day { width: 2.5rem; line-height: 2.5rem; margin: 0.1rem; }
-                .react-datepicker__current-month { font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 1rem; }
+                .react-datepicker__current-month { 
+                    font-size: 1rem; 
+                    font-weight: 800; 
+                    color: #111827; 
+                    margin-bottom: 1rem; 
+                }
             `}</style>
 
             {/* Category Navigation - Minimal & Clean */}
@@ -267,23 +309,26 @@ const HeroSearch = () => {
                                     dateFormat="MMM d, yyyy"
                                     calendarClassName="booking-calendar"
                                     calendarContainer={({ className, children }) => (
-                                        <div className={`${className} bg-white shadow-2xl rounded-2xl border border-gray-100 overflow-hidden flex flex-col font-sans max-w-4xl`}>
+                                        <div className="bg-white shadow-2xl rounded-2xl border border-gray-100 overflow-hidden flex flex-col font-sans" style={{ minWidth: '700px' }}>
 
                                             {/* Header: Selected Dates Display */}
                                             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                                                 <div className="flex items-center gap-4 text-xl font-bold text-gray-900">
-                                                    <div className="border-b-2 border-blue-600 pb-1">
+                                                    <div className={`border-b-2 pb-1 transition-colors ${startDate ? 'border-purple-600 text-purple-700' : 'border-transparent'}`}>
                                                         {startDate ? startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'Check-in'}
                                                     </div>
                                                     <span className="text-gray-400">→</span>
-                                                    <div className="border-b-2 border-transparent pb-1">
+                                                    <div className={`border-b-2 pb-1 transition-colors ${endDate ? 'border-purple-600 text-purple-700' : 'border-transparent'}`}>
                                                         {endDate ? endDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'Check-out'}
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {/* Body: Calendar */}
-                                            <div className="relative p-2">{children}</div>
+                                            <div className="relative p-4 flex justify-center">
+                                                {/* Ensure children (months) are rendered here. CSS handled in style block below to force flex row */}
+                                                {children}
+                                            </div>
 
                                             {/* Footer: Flexible Options & Done Button */}
                                             <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-white">
@@ -294,7 +339,10 @@ const HeroSearch = () => {
                                                         <button
                                                             key={idx}
                                                             type="button"
-                                                            onClick={() => handleQuickSelect(opt.val)}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setQuickSelectDays(opt.val);
+                                                            }}
                                                             className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${(quickSelectDays === opt.val)
                                                                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white border-transparent shadow-md'
                                                                 : 'border-gray-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50'
@@ -308,8 +356,17 @@ const HeroSearch = () => {
                                                 {/* Right: Done Button */}
                                                 <button
                                                     type="button"
-                                                    onClick={() => dpRef.current.setOpen(false)}
-                                                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transform transition-all active:scale-95 text-sm"
+                                                    disabled={!startDate || !endDate}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        if (startDate && endDate) {
+                                                            dpRef.current.setOpen(false);
+                                                        }
+                                                    }}
+                                                    className={`px-6 py-2 font-bold rounded-lg shadow-md text-sm transition-all ${(!startDate || !endDate)
+                                                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white hover:shadow-lg transform active:scale-95'
+                                                        }`}
                                                 >
                                                     Done
                                                 </button>
