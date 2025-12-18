@@ -240,20 +240,29 @@ const HeroSearch = () => {
                                     dateFormat="MMM d, yyyy"
                                     calendarClassName="booking-calendar"
                                 >
-                                    <div className="calendar-tabs">
+                                    <div className="flex items-center justify-between p-2 border-b border-gray-100 mb-2">
+                                        <div className="calendar-tabs flex gap-2">
+                                            <button
+                                                className={`calendar-tab ${calendarTab === 'calendar' ? 'active' : ''}`}
+                                                onClick={() => setCalendarTab('calendar')}
+                                                type="button"
+                                            >
+                                                Calendar
+                                            </button>
+                                            <button
+                                                className={`calendar-tab ${calendarTab === 'flexible' ? 'active' : ''}`}
+                                                onClick={() => setCalendarTab('flexible')}
+                                                type="button"
+                                            >
+                                                I'm flexible
+                                            </button>
+                                        </div>
                                         <button
-                                            className={`calendar-tab ${calendarTab === 'calendar' ? 'active' : ''}`}
-                                            onClick={() => setCalendarTab('calendar')}
                                             type="button"
+                                            onClick={() => dpRef.current.setOpen(false)}
+                                            className="px-4 py-1.5 bg-gradient-to-r from-blue-700 to-indigo-700 text-white font-bold rounded-md shadow-sm text-xs uppercase tracking-wider hover:shadow-md transition-all"
                                         >
-                                            Calendar
-                                        </button>
-                                        <button
-                                            className={`calendar-tab ${calendarTab === 'flexible' ? 'active' : ''}`}
-                                            onClick={() => setCalendarTab('flexible')}
-                                            type="button"
-                                        >
-                                            I'm flexible
+                                            Done
                                         </button>
                                     </div>
                                     <div className="date-quick-select">
@@ -286,15 +295,7 @@ const HeroSearch = () => {
                                             7 days
                                         </button>
                                     </div>
-                                    <div className="flex items-center justify-end p-4 bg-gray-50 border-t border-gray-200 rounded-b-lg">
-                                        <button
-                                            type="button"
-                                            onClick={() => dpRef.current.setOpen(false)}
-                                            className="px-8 py-2.5 bg-gradient-to-r from-blue-700 to-indigo-700 hover:from-blue-800 hover:to-indigo-800 text-white font-bold rounded-lg shadow-md transition-all text-sm uppercase tracking-wider"
-                                        >
-                                            Done
-                                        </button>
-                                    </div>
+
                                 </DatePicker>
                             </div>
 
