@@ -230,7 +230,7 @@ const HeroSearch = () => {
                                     endDate={endDate}
                                     onChange={(update) => {
                                         setDateRange(update);
-                                        setQuickSelectDays(null); // Reset quick select when manually selecting
+                                        setQuickSelectDays(null);
                                     }}
                                     withPortal
                                     monthsShown={2}
@@ -239,63 +239,58 @@ const HeroSearch = () => {
                                     placeholderText="Check-in - Check-out"
                                     dateFormat="MMM d, yyyy"
                                     calendarClassName="booking-calendar"
-                                >
-                                    <div className="flex items-center justify-between p-2 border-b border-gray-100 mb-2">
-                                        <div className="calendar-tabs flex gap-2">
-                                            <button
-                                                className={`calendar-tab ${calendarTab === 'calendar' ? 'active' : ''}`}
-                                                onClick={() => setCalendarTab('calendar')}
-                                                type="button"
-                                            >
-                                                Calendar
-                                            </button>
-                                            <button
-                                                className={`calendar-tab ${calendarTab === 'flexible' ? 'active' : ''}`}
-                                                onClick={() => setCalendarTab('flexible')}
-                                                type="button"
-                                            >
-                                                I'm flexible
-                                            </button>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => dpRef.current.setOpen(false)}
-                                            className="px-4 py-1.5 bg-gradient-to-r from-blue-700 to-indigo-700 text-white font-bold rounded-md shadow-sm text-xs uppercase tracking-wider hover:shadow-md transition-all"
-                                        >
-                                            Done
-                                        </button>
-                                    </div>
-                                    <div className="date-quick-select">
-                                        <button
-                                            className={`date-quick-btn ${quickSelectDays === 1 ? 'active' : ''}`}
-                                            onClick={() => handleQuickSelect(1)}
-                                            type="button"
-                                        >
-                                            1 day
-                                        </button>
-                                        <button
-                                            className={`date-quick-btn ${quickSelectDays === 2 ? 'active' : ''}`}
-                                            onClick={() => handleQuickSelect(2)}
-                                            type="button"
-                                        >
-                                            2 days
-                                        </button>
-                                        <button
-                                            className={`date-quick-btn ${quickSelectDays === 3 ? 'active' : ''}`}
-                                            onClick={() => handleQuickSelect(3)}
-                                            type="button"
-                                        >
-                                            3 days
-                                        </button>
-                                        <button
-                                            className={`date-quick-btn ${quickSelectDays === 7 ? 'active' : ''}`}
-                                            onClick={() => handleQuickSelect(7)}
-                                            type="button"
-                                        >
-                                            7 days
-                                        </button>
-                                    </div>
+                                    calendarContainer={({ className, children }) => (
+                                        <div className={`${className} bg-white shadow-2xl rounded-2xl border border-gray-100 overflow-hidden flex flex-col font-sans max-w-4xl`}>
 
+                                            {/* Header: Selected Dates Display */}
+                                            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                                                <div className="flex items-center gap-4 text-xl font-bold text-gray-900">
+                                                    <div className="border-b-2 border-blue-600 pb-1">
+                                                        {startDate ? startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'Check-in'}
+                                                    </div>
+                                                    <span className="text-gray-400">→</span>
+                                                    <div className="border-b-2 border-transparent pb-1">
+                                                        {endDate ? endDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'Check-out'}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Body: Calendar */}
+                                            <div className="relative p-2">{children}</div>
+
+                                            {/* Footer: Flexible Options & Done Button */}
+                                            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-white">
+
+                                                {/* Left: Flexible Pills */}
+                                                <div className="flex flex-wrap gap-2">
+                                                    {[{ label: 'Exact dates', val: 0 }, { label: '± 1 day', val: 1 }, { label: '± 2 days', val: 2 }, { label: '± 3 days', val: 3 }, { label: '± 7 days', val: 7 }].map((opt, idx) => (
+                                                        <button
+                                                            key={idx}
+                                                            type="button"
+                                                            onClick={() => handleQuickSelect(opt.val)} // Note: Logic might need refinement for flexible search intent, but keeping simple for UI
+                                                            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${(quickSelectDays === opt.val)
+                                                                    ? 'border-blue-600 bg-blue-50 text-blue-700'
+                                                                    : 'border-gray-300 text-gray-600 hover:border-gray-400'
+                                                                }`}
+                                                        >
+                                                            {opt.label}
+                                                        </button>
+                                                    ))}
+                                                </div>
+
+                                                {/* Right: Done Button */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => dpRef.current.setOpen(false)}
+                                                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-sm text-sm transition-all"
+                                                >
+                                                    Done
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                >
+                                    {/* Empty Children to remove default header elements if any remain */}
                                 </DatePicker>
                             </div>
 
