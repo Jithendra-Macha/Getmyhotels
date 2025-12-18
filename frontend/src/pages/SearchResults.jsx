@@ -1,124 +1,106 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import HotelCard from '../components/HotelCard';
-import MapComponent from '../components/MapComponent';
-import SearchBar from '../components/SearchBar';
+import AdvancedHotelCard from '../components/Hotel/AdvancedHotelCard';
+import FilterSidebar from '../components/Search/FilterSidebar';
+import SearchContextBar from '../components/Search/SearchContextBar';
+import { hotelData } from '../mocks/hotelData'; // Use Mock Data for Rich UI
 
 const SearchResults = () => {
     const [hotels, setHotels] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [mapCenter, setMapCenter] = useState({ lat: 40.7580, lng: -73.9855 }); // Default: NYC
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const locationQuery = searchParams.get('location');
-    const checkIn = searchParams.get('checkIn') || searchParams.get('check_in');
-    const checkOut = searchParams.get('checkOut') || searchParams.get('check_out');
-    const guests = searchParams.get('guests') || searchParams.get('adults') || 1;
+    const checkIn = searchParams.get('checkIn');
+    const checkOut = searchParams.get('checkOut');
+    const guests = searchParams.get('guests') || 2;
 
-    // Geocode the search location to get coordinates for the map
     useEffect(() => {
-        if (locationQuery && window.google) {
-            const geocoder = new window.google.maps.Geocoder();
-            geocoder.geocode({ address: locationQuery }, (results, status) => {
-                if (status === 'OK' && results[0]) {
-                    const { lat, lng } = results[0].geometry.location;
-                    setMapCenter({ lat: lat(), lng: lng() });
-                }
-            });
-        }
+        // Simulate API Fetch with artificial delay for realism
+        setLoading(true);
+        setTimeout(() => {
+            setHotels(hotelData); // Load rich mock data
+            setLoading(false);
+        }, 800);
+
+        // Scroll to top
+        window.scrollTo(0, 0);
     }, [locationQuery]);
 
-    useEffect(() => {
-        const fetchHotels = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                // Construct API URL with query parameters
-                let apiUrl = 'https://getmyhotels-com.onrender.com/hotels';
-                const params = new URLSearchParams();
-
-                // Default dates if missing
-                const today = new Date();
-                today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-                const todayStr = today.toISOString().split('T')[0];
-
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const tmrStr = tomorrow.toISOString().split('T')[0];
-
-                const dayAfter = new Date(tomorrow);
-                dayAfter.setDate(dayAfter.getDate() + 1);
-                const dayAfterStr = dayAfter.toISOString().split('T')[0];
-
-                const finalCheckIn = checkIn || tmrStr;
-                const finalCheckOut = checkOut || dayAfterStr;
-
-                if (locationQuery) params.append('location', locationQuery);
-                params.append('check_in', finalCheckIn);
-                params.append('check_out', finalCheckOut);
-                if (guests) params.append('guests', guests);
-
-                const response = await fetch(`${apiUrl}?${params.toString()}`);
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch hotels');
-                }
-                const data = await response.json();
-                setHotels(data);
-            } catch (err) {
-                console.error("Error fetching hotels:", err);
-                setError("Failed to load hotels. Please try again later.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchHotels();
-    }, [locationQuery, checkIn, checkOut, guests]);
-
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col">
-            <div className="bg-white shadow-sm p-4">
-                <div className="max-w-7xl mx-auto">
-                    <SearchBar />
-                </div>
-            </div>
+        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
 
-            <div className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
-                <h1 className="text-2xl font-bold text-gray-900 mb-6">
-                    {locationQuery ? `Hotels in ${locationQuery}` : 'All Hotels'}
-                </h1>
+            {/* 1. Context Bar (Sticky) */}
+            <SearchContextBar
+                locationQuery={locationQuery}
+                checkIn={checkIn}
+                checkOut={checkOut}
+                guests={guests}
+            />
 
-                {loading ? (
-                    <div className="flex justify-center items-center h-64">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+                <div className="flex flex-col lg:flex-row gap-8">
+
+                    {/* 2. Sidebar (Filters) */}
+                    <div className="lg:w-1/4 flex-shrink-0">
+                        <div className="sticky top-[150px]">
+                            <FilterSidebar />
+                        </div>
                     </div>
-                ) : error ? (
-                    <div className="text-center text-red-500 py-8">{error}</div>
-                ) : (
-                    <div className="flex flex-col lg:flex-row gap-6">
-                        {/* Hotel List */}
-                        <div className="lg:w-3/5 space-y-6">
-                            {hotels.length > 0 ? (
-                                hotels.map(hotel => (
-                                    <HotelCard key={hotel.id} hotel={hotel} />
-                                ))
-                            ) : (
-                                <div className="text-center text-gray-500 py-8">
-                                    No hotels found matching your criteria.
-                                </div>
-                            )}
+
+                    {/* 3. Main Content (Hotel Grid) */}
+                    <div className="flex-1">
+
+                        {/* Status Header */}
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-xl font-bold text-gray-900">
+                                {locationQuery ? `Properties in ${locationQuery}` : 'Top Recommend Properties'}
+                                <span className="ml-2 text-gray-500 text-base font-normal">{hotels.length} results found</span>
+                            </h2>
                         </div>
 
-                        {/* Map View */}
-                        <div className="hidden lg:block lg:w-2/5 sticky top-4 h-[calc(100vh-120px)]">
-                            <div className="bg-white rounded-lg shadow-md h-full overflow-hidden">
-                                <MapComponent hotels={hotels} center={mapCenter} />
+                        {/* Loading State */}
+                        {loading ? (
+                            <div className="space-y-4">
+                                {[1, 2, 3].map(i => (
+                                    <div key={i} className="h-64 bg-white rounded-2xl shadow-sm border border-gray-100 animate-pulse flex">
+                                        <div className="w-1/3 bg-gray-200"></div>
+                                        <div className="flex-1 p-6 space-y-4">
+                                            <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                                            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                                            <div className="h-20 bg-gray-200 rounded w-full"></div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
+                        ) : (
+                            <div className="space-y-6">
+                                {/* Map through hotels */}
+                                {hotels.map(hotel => (
+                                    <AdvancedHotelCard key={hotel.id} hotel={hotel} />
+                                ))}
+
+                                {/* Pagination / Load More */}
+                                <div className="pt-8 flex justify-center">
+                                    <button className="bg-white border border-gray-300 text-gray-700 font-bold py-3 px-8 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
+                                        Show more results
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* FairRank Transparency Footer */}
+                        <div className="mt-12 p-6 bg-blue-50/50 border border-blue-100 rounded-xl text-center">
+                            <h5 className="font-bold text-blue-900 mb-2">How we rank properties (FairRank™)</h5>
+                            <p className="text-sm text-blue-800 max-w-2xl mx-auto">
+                                Unlike other booking sites, we don't let hotels pay to appear on top. Our AI ranks properties based on
+                                <strong> quality, unique character (boutique factor)</strong>, and <strong>sustainability efforts</strong>
+                                to surface true hidden gems.
+                            </p>
                         </div>
+
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );
