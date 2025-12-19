@@ -1,19 +1,18 @@
-import React, { useRef } from 'react';
+```javascript
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-const destinations = [
-    { name: "Orlando", properties: "5k+ stays", image: "https://images.unsplash.com/photo-1597466599360-3b9775841aec?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-    { name: "Las Vegas", properties: "1.7k+ stays", image: "https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-    { name: "New York", properties: "3k+ stays", image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-    { name: "Atlanta", properties: "2k+ stays", image: "https://images.unsplash.com/photo-1594902194883-9b9aa5ee5d92?auto=format&fit=crop&w=600&q=80" },
-    { name: "Myrtle Beach", properties: "6k+ stays", image: "https://images.unsplash.com/photo-1579782540608-aa866f81df68?auto=format&fit=crop&w=600&q=80" },
-    { name: "Los Angeles", properties: "4k+ stays", image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80" },
-    { name: "Chicago", properties: "2.5k+ stays", image: "https://images.unsplash.com/photo-1494522855154-9297ac14b55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-    { name: "San Francisco", properties: "1.8k+ stays", image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-];
-
 const ExploreCarousel = () => {
+    const [destinations, setDestinations] = useState([]);
     const scrollRef = useRef(null);
+
+    useEffect(() => {
+        // Fetch curated destinations from backend
+        fetch('http://localhost:8000/destinations')
+            .then(res => res.json())
+            .then(data => setDestinations(data))
+            .catch(err => console.error("Failed to load destinations", err));
+    }, []);
 
     const scroll = (direction) => {
         if (scrollRef.current) {
@@ -49,7 +48,7 @@ const ExploreCarousel = () => {
                 className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-2 snap-x"
             >
                 {destinations.map((dest, idx) => (
-                    <Link to={`/search?location=${dest.name}`} key={idx} className="flex flex-col items-center group min-w-[100px] snap-center cursor-pointer">
+                    <Link to={`/ search ? location = ${ dest.name } `} key={idx} className="flex flex-col items-center group min-w-[100px] snap-center cursor-pointer">
                         {/* Story/Avatar Ring Animation */}
                         <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-3">
                             <div className="absolute inset-0 bg-gradient-to-tr from-yellow-400 via-orange-500 to-purple-600 rounded-full opacity-70 group-hover:opacity-100 animate-spin-slow p-[2px]">
