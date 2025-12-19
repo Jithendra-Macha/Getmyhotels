@@ -1,25 +1,75 @@
 export const hotelData = [
     {
         id: 1,
-        name: "The William Vale",
-        location: "Williamsburg, Brooklyn, NY",
-        rating: 8.9,
-        reviews: 1242,
+        name: "The Brooklyn Brownstone House",
+        address: "452 7th Avenue, Park Slope, Brooklyn, NY 11215",
+        location: "Park Slope, Brooklyn",
+        coordinates: { lat: 40.6602, lng: -73.9817 },
+        distances: [
+            { to: "Prospect Park", value: 0.2, unit: "mi", walkTime: "4 min" },
+            { to: "7th Ave Subway (F/G)", value: 0.1, unit: "mi", walkTime: "2 min" }
+        ],
+        rating: 4.9,
+        reviewsCount: 128,
+        reviews: 128, // Keeping for backward compatibility
+        reviewDistribution: { 5: 102, 4: 20, 3: 4, 2: 1, 1: 1 },
+        reviewResponseRate: 92,
+        avgResponseTime: "1.2 days",
+        isBoutique: true,
+        is_boutique: true, // Keeping for backward compatibility
+        badges: [
+            { id: "family-run", label: "Family-Run", icon: "👨‍👩‍👧‍👦" },
+            { id: "historic", label: "Historic Building", icon: "🏛️" },
+            { id: "eco", label: "Eco-Certified", icon: "🌱", link: "/sustainability" }
+        ],
+        pricePromise: true,
+        shortDescription: "A restored 1920s Brooklyn brownstone run by a husband-wife team.",
+        longDescription: "A restored 1920s Brooklyn brownstone run by Lena & Tom offering a unique and personal stay experience in the heart of Park Slope.",
+        neighborhoodDescription: "Park Slope is known for its tree-lined brownstone streets, proximity to Prospect Park, and vibrant community atmosphere.",
+        rooms: [
+            {
+                id: 101,
+                name: "Cozy Queen Room",
+                ratePlans: [
+                    {
+                        id: "flex",
+                        name: "Pay Later",
+                        description: "Free cancellation until 48h before",
+                        totalPrice: 154,
+                        features: ["Free cancellation", "No prepayment"],
+                        isRefundable: true
+                    },
+                    {
+                        id: "save15",
+                        name: "Pay Now & Save 15%",
+                        description: "Non-refundable",
+                        totalPrice: 132,
+                        features: ["15% off", "Instant confirmation"],
+                        isRefundable: false
+                    }
+                ],
+                pricePerOccupancy: { 1: 154, 2: 154, 3: 174 },
+                accessibilityFeatures: ["Step-free entrance", "Visual alarms"]
+            }
+        ],
+        availability: {
+            status: "available",
+            nextAvailableDate: "2026-02-25",
+            lastUpdated: "2025-12-19T10:30:00Z"
+        },
         image_url: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        price_per_night: 249,
-        taxes_and_fees: 39,
-        is_boutique: true,
+        price_per_night: 154,
+        taxes_and_fees: 0, // Included in totalPrice above, but keeping field
         is_independent: true,
-        ai_tagline: "Romantic boutique with skyline views — loved by solo travelers & couples.",
+        ai_tagline: "A restored 1920s Brooklyn brownstone run by a husband-wife team.",
         ai_relevance_score: 9.8,
-        ai_match_reason: "Matches your love for design-led stays + 10-min walk to subway.",
+        ai_match_reason: "Perfect match for local charm and historic architecture lovers.",
         sustainability_score: 9,
-        badges: ["Eco-Certified", "Boutique", "Local Ownership"],
-        amenities: ["Pool", "Rooftop Bar", "Pet-Friendly", "Free Wi-Fi"],
-        deal_tag: "VIP Member Savings",
-        deal_savings: 24,
-        fair_rank_boost: true, // "Hidden Gem" logic
-        description: "A modern luxury hotel in the heart of Williamsburg featuring a rooftop pool and award-winning dining."
+        amenities: ["Free Wi-Fi", "Garden Access", "Breakfast Included"], // Defaulting some amenities
+        deal_tag: "Pay Later",
+        deal_savings: 0,
+        fair_rank_boost: true,
+        description: "A restored 1920s Brooklyn brownstone run by a husband-wife team."
     },
     {
         id: 2,
