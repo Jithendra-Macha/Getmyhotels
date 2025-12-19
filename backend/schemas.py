@@ -70,6 +70,13 @@ class Booking(BookingBase):
     user_id: Optional[int] = None
     room_id: int
     total_price: float
+    status: str
+    rating: int
+    
+    # helper fields for frontend
+    hotel_name: Optional[str] = None
+    hotel_location: Optional[str] = None
+    hotel_image: Optional[str] = None
 
     class Config:
         orm_mode = True
@@ -79,3 +86,20 @@ class HotelDetail(Hotel):
 
 class AIPlanRequest(BaseModel):
     prompt: str
+
+class SearchHistoryBase(BaseModel):
+    location: str
+    check_in: str
+    check_out: str
+    guests: int
+
+class SearchHistoryCreate(SearchHistoryBase):
+    pass
+
+class SearchHistory(SearchHistoryBase):
+    id: int
+    user_id: Optional[int] = None
+    created_at: Optional[str] = None
+
+    class Config:
+        orm_mode = True

@@ -22,6 +22,9 @@ const HeroSearch = () => {
     const [aiResult, setAiResult] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    // Coordinate State
+    const [coords, setCoords] = useState({ lat: null, lng: null });
+
     // Google Places Autocomplete
     const {
         ready,
@@ -52,8 +55,87 @@ const HeroSearch = () => {
         getGeocode({ address: description }).then((results) => {
             const { lat, lng } = getLatLng(results[0]);
             console.log("📍 Coordinates: ", { lat, lng });
+            setCoords({ lat, lng });
         });
     };
+
+    // ... existing Quick Date and Categories code ...
+    // Note: Implicitly preserving lines 58-212 via ...
+
+    // ... inside return ...
+
+    {/* Search Button */ }
+    <div className="flex-none">
+        <button
+            onClick={async () => {
+                // 1. Construct Search Object
+                const searchData = {
+                    id: Date.now(),
+                    location: value,
+                    check_in: startDate?.toISOString() || new Date().toISOString(),
+                    check_out: endDate?.toISOString() || new Date(Date.now() + 86400000).toISOString(),
+                    guests: 2,
+                    lat: coords.lat,
+                    lng: coords.lng
+                };
+
+                // 2. Save to LocalStorage (Instant & Works for Guests)
+                try {
+                    const existingSearches = JSON.parse(localStorage.getItem('recent_searches') || '[]');
+                    // Deduplicate by location (simple check)
+                    const filteredSearches = existingSearches.filter(s => s.location !== value);
+                    // Add to front
+                    filteredSearches.unshift(searchData);
+                    // Limit to 5
+                    const limitedSearches = filteredSearches.slice(0, 5);
+                    localStorage.setItem('recent_searches', JSON.stringify(limitedSearches));
+                } catch (e) {
+                    console.error("Local storage error:", e);
+                }
+
+                // 3. Save to Backend (Sync if logged in)
+                const token = localStorage.getItem('token');
+                if (token && startDate && endDate) {
+                    try {
+                        await fetch('http://localhost:8000/recent-searches', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify({
+                                location: value,
+                                check_in: startDate.toISOString(),
+                                check_out: endDate.toISOString(),
+                                guests: 2
+                            })
+                        });
+                    } catch (err) {
+                        console.error("Failed to save search to backend", err);
+                    }
+                }
+
+                // Navigate to results
+                // FIXED: Changed /hotels to /search (as per App.jsx) and added lat/lng
+                const params = new URLSearchParams({
+                    location: value,
+                    checkIn: startDate?.toISOString(),
+                    checkOut: endDate?.toISOString(),
+                    guests: 2,
+                });
+                if (coords.lat && coords.lng) {
+                    params.append('lat', coords.lat);
+                    params.append('lng', coords.lng);
+                }
+
+                // Use React Router navigate instead of full reload if valid, but window.location is fine for now
+                window.location.href = `/search?${params.toString()}`;
+            }}
+            className="w-full h-full flex items-center justify-center px-8 py-4 border border-transparent text-base font-bold rounded-md text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 transition-all shadow-sm"
+        >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        </button>
+    </div>
 
     // Quick date selection handler
     const handleQuickSelect = (days) => {
@@ -411,7 +493,52 @@ const HeroSearch = () => {
                             {/* Search Button */}
                             <div className="flex-none">
                                 <button
-                                    onClick={() => {
+                                    onClick={async () => {
+                                        // 1. Construct Search Object
+                                        const searchData = {
+                                            id: Date.now(),
+                                            location: value,
+                                            check_in: startDate?.toISOString() || new Date().toISOString(),
+                                            check_out: endDate?.toISOString() || new Date(Date.now() + 86400000).toISOString(),
+                                            guests: 2
+                                        };
+
+                                        // 2. Save to LocalStorage (Instant & Works for Guests)
+                                        try {
+                                            const existingSearches = JSON.parse(localStorage.getItem('recent_searches') || '[]');
+                                            // Deduplicate by location (simple check)
+                                            const filteredSearches = existingSearches.filter(s => s.location !== value);
+                                            // Add to front
+                                            filteredSearches.unshift(searchData);
+                                            // Limit to 5
+                                            const limitedSearches = filteredSearches.slice(0, 5);
+                                            localStorage.setItem('recent_searches', JSON.stringify(limitedSearches));
+                                        } catch (e) {
+                                            console.error("Local storage error:", e);
+                                        }
+
+                                        // 3. Save to Backend (Sync if logged in)
+                                        const token = localStorage.getItem('token');
+                                        if (token && startDate && endDate) {
+                                            try {
+                                                await fetch('http://localhost:8000/recent-searches', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                        'Authorization': `Bearer ${token}`
+                                                    },
+                                                    body: JSON.stringify({
+                                                        location: value,
+                                                        check_in: startDate.toISOString(),
+                                                        check_out: endDate.toISOString(),
+                                                        guests: 2
+                                                    })
+                                                });
+                                            } catch (err) {
+                                                console.error("Failed to save search to backend", err);
+                                            }
+                                        }
+
                                         // Navigate to results
                                         window.location.href = `/hotels?location=${encodeURIComponent(value)}&checkIn=${startDate?.toISOString()}&checkOut=${endDate?.toISOString()}&guests=2`;
                                     }}

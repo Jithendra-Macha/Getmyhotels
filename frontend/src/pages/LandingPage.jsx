@@ -4,6 +4,9 @@ import Footer from '../components/Footer';
 import HeroSearch from '../components/Search/HeroSearch';
 import InteractiveMap from '../components/Map/InteractiveMap';
 import Navbar from '../components/Navbar';
+import RecentSearches from '../components/RecentSearches';
+import ExploreCarousel from '../components/ExploreCarousel';
+import TrendingDestinations from '../components/TrendingDestinations';
 // Switched to "Traveler Journey" image to connect with users (OTA vibe)
 const heroBg = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"; // Traveler overlooking view
 // import heroBg from '../assets/hero_bg.png';
@@ -81,79 +84,14 @@ const LandingPage = () => {
 
                 {/* FIFA World Cup 2026 Promo Banner Removed - Moved to Top */}
 
+                <RecentSearches />
 
                 {/* Trending Destinations Grid */}
-                <section>
-                    <div className="flex items-center justify-between mb-8">
-                        <div>
-                            <h2 className="text-2xl font-bold text-gray-900">Trending Bookings</h2>
-                            <p className="text-gray-500 mt-1">Most popular choices for travelers from your area</p>
-                        </div>
-                        <Link to="/search" className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 font-bold hover:underline">See all &rarr;</Link>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {/* Card 1 */}
-                        <div className="group relative rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300">
-                            <div className="aspect-w-3 aspect-h-4 h-80">
-                                <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Paris" />
-                            </div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                            <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-md text-xs font-bold text-gray-900 shadow-sm">
-                                Avg. $128
-                            </div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <h3 className="text-xl font-bold">Paris</h3>
-                                <p className="text-sm opacity-90">France</p>
-                            </div>
-                        </div>
 
-                        {/* Card 2 */}
-                        <div className="group relative rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300">
-                            <div className="aspect-w-3 aspect-h-4 h-80">
-                                <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Tokyo" />
-                            </div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                            <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-md text-xs font-bold text-gray-900 shadow-sm">
-                                Avg. $165
-                            </div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <h3 className="text-xl font-bold">Tokyo</h3>
-                                <p className="text-sm opacity-90">Japan</p>
-                            </div>
-                        </div>
-
-                        {/* Card 3 */}
-                        <div className="group relative rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300">
-                            <div className="aspect-w-3 aspect-h-4 h-80">
-                                <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="New York" />
-                            </div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                            <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-md text-xs font-bold text-gray-900 shadow-sm">
-                                Avg. $240
-                            </div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <h3 className="text-xl font-bold">New York</h3>
-                                <p className="text-sm opacity-90">USA</p>
-                            </div>
-                        </div>
-
-                        {/* Card 4 */}
-                        <div className="group relative rounded-xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300">
-                            <div className="aspect-w-3 aspect-h-4 h-80">
-                                <img src="https://images.unsplash.com/photo-1528642474493-1df432ea022e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Amsterdam" />
-                            </div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                            <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-md text-xs font-bold text-gray-900 shadow-sm">
-                                Avg. $185
-                            </div>
-                            <div className="absolute bottom-4 left-4 text-white">
-                                <h3 className="text-xl font-bold">Amsterdam</h3>
-                                <p className="text-sm opacity-90">Netherlands</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                {/* New Premium Sections */}
+                <ExploreCarousel />
+                <TrendingDestinations />
 
                 {/* Interactive Map Section */}
                 <section>

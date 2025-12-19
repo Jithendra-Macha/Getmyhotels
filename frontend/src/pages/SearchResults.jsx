@@ -10,22 +10,51 @@ const SearchResults = () => {
     const [loading, setLoading] = useState(true);
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const locationQuery = searchParams.get('location');
-    const checkIn = searchParams.get('checkIn');
-    const checkOut = searchParams.get('checkOut');
-    const guests = searchParams.get('guests') || 2;
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
 
     useEffect(() => {
-        // Simulate API Fetch with artificial delay for realism
-        setLoading(true);
-        setTimeout(() => {
-            setHotels(hotelData); // Load rich mock data
-            setLoading(false);
-        }, 800);
+        const fetchHotels = async () => {
+            setLoading(true);
+            try {
+                let url = `http://localhost:8000/hotels?guests=${guests}`;
+                if (lat && lng) {
+                    url += `&lat=${lat}&lng=${lng}`;
+                } else if (locationQuery) {
+                    url += `&location=${encodeURIComponent(locationQuery)}`;
+                }
+
+                if (checkIn) url += `&check_in=${checkIn}`;
+                if (checkOut) url += `&check_out=${checkOut}`;
+
+                const response = await fetch(url);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.length > 0) {
+                        setHotels(data);
+                    } else {
+                        // Fallback to mock if no real results found for demo purposes
+                        // or just show empty. Let's keep mock for robustness if backend is offline
+                        console.log("No backend results, using backup mock.");
+                        setHotels(hotelData);
+                    }
+                } else {
+                    console.error("Fetch failed");
+                    setHotels(hotelData); // Fallback on error
+                }
+            } catch (err) {
+                console.error("Error fetching hotels:", err);
+                setHotels(hotelData); // Fallback on error
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchHotels();
 
         // Scroll to top
         window.scrollTo(0, 0);
-    }, [locationQuery]);
+    }, [locationQuery, lat, lng, checkIn, checkOut, guests]);
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col font-sans">

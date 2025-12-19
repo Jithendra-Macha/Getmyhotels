@@ -6,8 +6,10 @@ export const hotelData = [
         location: "Park Slope, Brooklyn",
         coordinates: { lat: 40.6602, lng: -73.9817 },
         distances: [
-            { to: "Prospect Park", value: 0.2, unit: "mi", walkTime: "4 min" },
-            { to: "7th Ave Subway (F/G)", value: 0.1, unit: "mi", walkTime: "2 min" }
+            { to: "Prospect Park", value: 0.2, unit: "mi", walkTime: "4 min", type: "Park 🌳" },
+            { to: "7th Ave Subway (F/G)", value: 0.1, unit: "mi", walkTime: "2 min", type: "Transport 🚇" },
+            { to: "Sunrise Bagels", value: 0.3, unit: "mi", walkTime: "6 min", type: "Food 🥯" },
+            { to: "Peace Garden", value: 0.4, unit: "mi", walkTime: "8 min", type: "Hidden Gem 💎" }
         ],
         rating: 4.9,
         reviewsCount: 128,
@@ -30,6 +32,9 @@ export const hotelData = [
             {
                 id: 101,
                 name: "Cozy Queen Room",
+                image_url: "https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                size: "180 sq ft",
+                capacity: 2,
                 ratePlans: [
                     {
                         id: "flex",
@@ -48,8 +53,65 @@ export const hotelData = [
                         isRefundable: false
                     }
                 ],
-                pricePerOccupancy: { 1: 154, 2: 154, 3: 174 },
-                accessibilityFeatures: ["Step-free entrance", "Visual alarms"]
+                pricePerOccupancy: { 1: 154, 2: 154 },
+                accessibilityFeatures: ["Step-free entrance", "Visual alarms"],
+                honestNote: "Room 105 is cozier (180 sq ft) but has the best light — ideal for solo travelers or couples."
+            },
+            {
+                id: 102,
+                name: "The Garden Suite",
+                image_url: "https://images.unsplash.com/photo-1512918760532-3edbed13ee1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                size: "320 sq ft",
+                capacity: 3,
+                ratePlans: [
+                    {
+                        id: "flex",
+                        name: "Pay Later",
+                        description: "Free cancellation until 48h before",
+                        totalPrice: 224,
+                        features: ["Free cancellation", "Garden access"],
+                        isRefundable: true
+                    },
+                    {
+                        id: "save15",
+                        name: "Pay Now & Save 15%",
+                        description: "Non-refundable",
+                        totalPrice: 190,
+                        features: ["15% off", "Instant confirmation"],
+                        isRefundable: false
+                    }
+                ],
+                pricePerOccupancy: { 1: 224, 2: 224, 3: 254 },
+                accessibilityFeatures: ["Ground floor", "Wide doorways"],
+                honestNote: "Direct access to the backyard garden. Perfect for morning coffee lovers."
+            },
+            {
+                id: 103,
+                name: "Family Studio (2 Queens)",
+                image_url: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                size: "450 sq ft",
+                capacity: 4,
+                ratePlans: [
+                    {
+                        id: "flex",
+                        name: "Pay Later",
+                        description: "Free cancellation until 48h before",
+                        totalPrice: 289,
+                        features: ["Free cancellation", "Kitchenette"],
+                        isRefundable: true
+                    },
+                    {
+                        id: "save15",
+                        name: "Pay Now & Save 15%",
+                        description: "Non-refundable",
+                        totalPrice: 245,
+                        features: ["15% off", "Instant confirmation"],
+                        isRefundable: false
+                    }
+                ],
+                pricePerOccupancy: { 1: 289, 2: 289, 3: 319, 4: 349 },
+                accessibilityFeatures: ["Step-free entrance"],
+                honestNote: "Spacious layout with a mini-kitchenette. Great for longer stays with kids."
             }
         ],
         availability: {

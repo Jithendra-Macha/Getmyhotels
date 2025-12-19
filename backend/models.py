@@ -54,6 +54,24 @@ class Booking(Base):
     total_price = Column(Float)
     guest_name = Column(String)
     guest_email = Column(String)
+    status = Column(String, default="upcoming") # upcoming, completed, cancelled
+    rating = Column(Integer, default=0)
 
     user = relationship("User", back_populates="bookings")
     room = relationship("Room", back_populates="bookings")
+
+class SearchHistory(Base):
+    __tablename__ = "search_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True) # Nullable for guest searches if needed, or strictly authenticated
+    location = Column(String)
+    check_in = Column(String)
+    check_out = Column(String)
+    guests = Column(Integer)
+    created_at = Column(String) # Storing as ISO string simplicity
+
+    user = relationship("User", back_populates="searches")
+
+# Update User relationship
+User.searches = relationship("SearchHistory", back_populates="user")

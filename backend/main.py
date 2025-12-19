@@ -105,10 +105,48 @@ def search_hotels_endpoint(
     check_in: str = None,
     check_out: str = None,
     guests: int = 1,
+    lat: float = None,
+    lng: float = None,
     db: Session = Depends(get_db)
 ):
-    # Use TBO API for search
-    if location and check_in and check_out:
+    # 1. Try Xeni Search (if Lat/Lng provided or resolved)
+    if lat and lng and check_in and check_out:
+        try:
+            from xeni_client import xeni_client
+            # Ensure dates are YYYY-MM-DD
+            # (Assuming frontend sends ISO or similar, client handles conversion if needed)
+            
+            print(f"DEBUG: Searching Xeni for {lat}, {lng}", flush=True)
+            xeni_result = xeni_client.search_hotels(lat, lng, check_in.split('T')[0], check_out.split('T')[0], guests)
+            
+            if xeni_result and xeni_result.get('data'):
+                hotels = []
+                # Xeni structure: data -> properties -> [...]
+                # Need to inspect actual response structure, typically 'data' contains the list or 'data.properties'
+                properties = xeni_result.get('data', {}).get('properties', []) or xeni_result.get('data', [])
+                
+                for prop in properties[:30]:
+                    hotels.append(schemas.Hotel(
+                        id=prop.get('id', 0), # Using Xeni ID
+                        name=prop.get('name', 'Unknown Hotel'),
+                        location=prop.get('address', {}).get('address_line_1', 'Unknown Address'),
+                        description=prop.get('overview', {}).get('description', 'No description'),
+                        rating=float(prop.get('rating', 0)),
+                        # Handling images - Xeni usually returns list of images
+                        image_url=prop.get('images', [{}])[0].get('url', "https://via.placeholder.com/400x300"),
+                        price_per_night=float(prop.get('min_rate', {}).get('price', prop.get('rate', {}).get('price', 0)))
+                    ))
+                
+                if hotels:
+                     return hotels
+                     
+        except Exception as e:
+            print(f"Xeni Search Error: {e}", flush=True)
+            # Fall through to TBO/Local
+            pass
+
+    # 2. Use TBO API for search (Legacy/Backup)
+    if location and check_in and check_out and not (lat and lng):
         try:
             import tbo_client
             # tbo_client.search_hotels now handles YYYY-MM-DD or DD/MM/YYYY
@@ -183,6 +221,44 @@ def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db)
     db.refresh(db_booking)
     return db_booking
 
+@app.get("/my-bookings", response_model=list[schemas.Booking])
+def get_my_bookings(current_user: schemas.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    bookings = db.query(models.Booking).filter(models.Booking.user_id == current_user.id).all()
+    
+    # Populate helper fields for frontend display
+    result = []
+    for b in bookings:
+        # Pydantic model will ignore extra fields unless configured, but we added them to the schema
+        # We need to manually fetch hotel details via relation
+        if b.room and b.room.hotel:
+            b.hotel_name = b.room.hotel.name
+            b.hotel_location = b.room.hotel.location
+            b.hotel_image = b.room.hotel.image_url
+        result.append(b)
+        
+    return result
+
+@app.put("/bookings/{booking_id}/cancel", response_model=schemas.Booking)
+def cancel_booking(booking_id: int, current_user: schemas.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    booking = db.query(models.Booking).filter(models.Booking.id == booking_id).first()
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found")
+    
+    if booking.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to cancel this booking")
+        
+    booking.status = "cancelled"
+    db.commit()
+    db.refresh(booking)
+    
+    # Populate helpers
+    if booking.room and booking.room.hotel:
+        booking.hotel_name = booking.room.hotel.name
+        booking.hotel_location = booking.room.hotel.location
+        booking.hotel_image = booking.room.hotel.image_url
+        
+    return booking
+
 @app.post("/ai-plan")
 async def generate_ai_plan(request: schemas.AIPlanRequest):
     api_key = os.getenv("DASHSCOPE_API_KEY")
@@ -208,6 +284,32 @@ async def generate_ai_plan(request: schemas.AIPlanRequest):
         
         return {"plan": response.choices[0].message.content}
 
+
     except Exception as e:
         print(f"AI Plan Error: {e}", flush=True)
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/recent-searches", response_model=schemas.SearchHistory)
+def create_recent_search(search: schemas.SearchHistoryCreate, current_user: schemas.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    from datetime import datetime
+    
+    # Check if duplicates exist recently? For now, just append.
+    db_search = models.SearchHistory(
+        **search.dict(),
+        user_id=current_user.id,
+        created_at=datetime.utcnow().isoformat()
+    )
+    db.add(db_search)
+    db.commit()
+    db.refresh(db_search)
+    return db_search
+
+@app.get("/recent-searches", response_model=list[schemas.SearchHistory])
+def get_recent_searches(current_user: schemas.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    # Get last 5 searches, ordered by newest first
+    # Note: DB might not guarantee order without explicit order_by if ID isn't sequential, but ID usually is.
+    # Ideally should order by created_at desc.
+    searches = db.query(models.SearchHistory).filter(
+        models.SearchHistory.user_id == current_user.id
+    ).order_by(models.SearchHistory.id.desc()).limit(5).all()
+    return searches
