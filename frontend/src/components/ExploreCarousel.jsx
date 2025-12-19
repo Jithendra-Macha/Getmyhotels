@@ -1,4 +1,3 @@
-```javascript
 import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -48,7 +47,7 @@ const ExploreCarousel = () => {
                 className="flex gap-8 overflow-x-auto pb-8 scrollbar-hide px-2 snap-x"
             >
                 {destinations.map((dest, idx) => (
-                    <Link to={`/ search ? location = ${ dest.name } `} key={idx} className="flex flex-col items-center group min-w-[100px] snap-center cursor-pointer">
+                    <Link to={`/search?location=${dest.name}`} key={idx} className="flex flex-col items-center group min-w-[100px] snap-center cursor-pointer">
                         {/* Story/Avatar Ring Animation */}
                         <div className="relative w-24 h-24 sm:w-28 sm:h-28 mb-3">
                             <div className="absolute inset-0 bg-gradient-to-tr from-yellow-400 via-orange-500 to-purple-600 rounded-full opacity-70 group-hover:opacity-100 animate-spin-slow p-[2px]">
