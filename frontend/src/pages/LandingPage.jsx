@@ -92,6 +92,8 @@ const LandingPage = () => {
 
                 {/* New Premium Sections */}
                 <ExploreCarousel />
+                {/* Deal of the Day (Horizontal List) */}
+                <DealsOfTheDay />
                 <TrendingDestinations />
 
                 {/* Interactive Map Section */}
@@ -103,8 +105,7 @@ const LandingPage = () => {
                     <InteractiveMap />
                 </section>
 
-                {/* Deal of the Day (Horizontal List) */}
-                <DealsOfTheDay />
+
             </div>
 
             <Footer />
