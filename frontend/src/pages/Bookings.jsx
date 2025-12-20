@@ -19,7 +19,7 @@ const Bookings = () => {
             }
 
             try {
-                const response = await fetch('http://localhost:8000/my-bookings', {
+                const response = await fetch('https://getmyhotels-backend.vercel.app/my-bookings', {
                     headers: {
                         'Authorization': `Bearer ${token} `
                     }
@@ -61,7 +61,7 @@ const Bookings = () => {
         if (!confirm("Are you sure you want to cancel this booking?")) return;
 
         try {
-            const response = await fetch(`http://localhost:8000/bookings/${bookingId}/cancel`, {
+            const response = await fetch(`https://getmyhotels-backend.vercel.app/bookings/${bookingId}/cancel`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`

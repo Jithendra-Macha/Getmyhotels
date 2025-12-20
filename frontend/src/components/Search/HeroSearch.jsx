@@ -97,7 +97,7 @@ const HeroSearch = () => {
                 const token = localStorage.getItem('token');
                 if (token && startDate && endDate) {
                     try {
-                        await fetch('http://localhost:8000/recent-searches', {
+                        await fetch('https://getmyhotels-backend.vercel.app/recent-searches', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -521,7 +521,7 @@ const HeroSearch = () => {
                                         const token = localStorage.getItem('token');
                                         if (token && startDate && endDate) {
                                             try {
-                                                await fetch('http://localhost:8000/recent-searches', {
+                                                await fetch('https://getmyhotels-backend.vercel.app/recent-searches', {
                                                     method: 'POST',
                                                     headers: {
                                                         'Content-Type': 'application/json',

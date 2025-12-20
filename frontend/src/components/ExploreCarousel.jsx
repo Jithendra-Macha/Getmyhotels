@@ -19,7 +19,7 @@ const ExploreCarousel = () => {
 
     useEffect(() => {
         // Try to fetch dynamic data from backend
-        fetch('http://localhost:8000/destinations')
+        fetch('https://getmyhotels-backend.vercel.app/destinations')
             .then(res => res.json())
             .then(data => {
                 if (data && data.length > 0) {

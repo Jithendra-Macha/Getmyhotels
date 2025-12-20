@@ -17,7 +17,7 @@ const SearchResults = () => {
         const fetchHotels = async () => {
             setLoading(true);
             try {
-                let url = `http://localhost:8000/hotels?guests=${guests}`;
+                let url = `https://getmyhotels-backend.vercel.app/hotels?guests=${guests}`;
                 if (lat && lng) {
                     url += `&lat=${lat}&lng=${lng}`;
                 } else if (locationQuery) {

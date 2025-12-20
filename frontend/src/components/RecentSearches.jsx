@@ -23,7 +23,7 @@ const RecentSearches = () => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const response = await fetch('http://localhost:8000/recent-searches', {
+                    const response = await fetch('https://getmyhotels-backend.vercel.app/recent-searches', {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
