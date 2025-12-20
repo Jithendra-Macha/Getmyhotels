@@ -158,7 +158,8 @@ const HeroSearch = () => {
         setLoading(true);
         setAiResult(null);
         try {
-            const response = await fetch('https://getmyhotels-com.onrender.com/ai-plan', {
+            const apiUrl = import.meta.env.VITE_API_URL || 'https://getmyhotels-com.onrender.com';
+            const response = await fetch(`${apiUrl}/ai-plan`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ prompt: aiPrompt })
