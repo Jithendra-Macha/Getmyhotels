@@ -1,10 +1,25 @@
+# Dependencies
 node_modules/
-dist/
-build/
-.env
+venv/
+env/
 __pycache__/
 *.pyc
-venv/
+
+# Environment Variables
+.env
+.env.local
+.env.production
+backend/.env
+frontend/.env
+
+# Build Output
+dist/
+build/
+
+# IDEs
 .vscode/
 .idea/
+
+# System
 .DS_Store
+Thumbs.db
