@@ -7,6 +7,7 @@ import Navbar from '../components/Navbar';
 import RecentSearches from '../components/RecentSearches';
 import ExploreCarousel from '../components/ExploreCarousel';
 import TrendingDestinations from '../components/TrendingDestinations';
+import DealsOfTheDay from '../components/DealsOfTheDay';
 // Switched to "Traveler Journey" image to connect with users (OTA vibe)
 const heroBg = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"; // Traveler overlooking view
 // import heroBg from '../assets/hero_bg.png';
@@ -103,38 +104,7 @@ const LandingPage = () => {
                 </section>
 
                 {/* Deal of the Day (Horizontal List) */}
-                <section>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Deals of the Weekend</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {/* Deal 1 */}
-                        <div className="flex bg-gray-50 rounded-lg p-4 transition hover:bg-white hover:shadow-md cursor-pointer border border-gray-100">
-                            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=60" className="w-24 h-24 rounded-lg object-cover" alt="Hotel" />
-                            <div className="ml-4 flex flex-col justify-center">
-                                <h4 className="font-bold text-gray-900">Grand Resort</h4>
-                                <p className="text-xs text-gray-500 mb-2">Miami, FL</p>
-                                <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 font-bold text-lg">$120 <span className="text-gray-400 font-normal text-xs line-through">$200</span></div>
-                            </div>
-                        </div>
-                        {/* Deal 2 */}
-                        <div className="flex bg-gray-50 rounded-lg p-4 transition hover:bg-white hover:shadow-md cursor-pointer border border-gray-100">
-                            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=60" className="w-24 h-24 rounded-lg object-cover" alt="Hotel" />
-                            <div className="ml-4 flex flex-col justify-center">
-                                <h4 className="font-bold text-gray-900">The Plaza</h4>
-                                <p className="text-xs text-gray-500 mb-2">New York, NY</p>
-                                <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 font-bold text-lg">$340 <span className="text-gray-400 font-normal text-xs line-through">$450</span></div>
-                            </div>
-                        </div>
-                        {/* Deal 3 */}
-                        <div className="flex bg-gray-50 rounded-lg p-4 transition hover:bg-white hover:shadow-md cursor-pointer border border-gray-100">
-                            <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=60" className="w-24 h-24 rounded-lg object-cover" alt="Hotel" />
-                            <div className="ml-4 flex flex-col justify-center">
-                                <h4 className="font-bold text-gray-900">Ocean View</h4>
-                                <p className="text-xs text-gray-500 mb-2">Cancun, MX</p>
-                                <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 font-bold text-lg">$180 <span className="text-gray-400 font-normal text-xs line-through">$280</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                <DealsOfTheDay />
             </div>
 
             <Footer />
