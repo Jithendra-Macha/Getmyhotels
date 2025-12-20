@@ -412,50 +412,13 @@ const HeroSearch = () => {
                                             style={{ minWidth: '700px' }}
                                             onMouseDown={(e) => e.stopPropagation()}
                                         >
-
-                                            {/* Header: Selected Dates Display */}
-                                            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-                                                <div className="flex items-center gap-4 text-xl font-bold text-gray-900">
-                                                    <div className={`border-b-2 pb-1 transition-colors ${startDate ? 'border-purple-600 text-purple-700' : 'border-transparent'}`}>
-                                                        {startDate ? startDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'Check-in'}
-                                                    </div>
-                                                    <span className="text-gray-400">→</span>
-                                                    <div className={`border-b-2 pb-1 transition-colors ${endDate ? 'border-purple-600 text-purple-700' : 'border-transparent'}`}>
-                                                        {endDate ? endDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) : 'Check-out'}
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                             {/* Body: Calendar */}
-                                            <div className="relative p-4 flex justify-center">
-                                                {/* Ensure children (months) are rendered here. CSS handled in style block below to force flex row */}
+                                            <div className="relative p-6 flex justify-center">
                                                 {children}
                                             </div>
 
-                                            {/* Footer: Flexible Options & Done Button */}
-                                            <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-white">
-
-                                                {/* Left: Flexible Pills */}
-                                                <div className="flex flex-wrap gap-2">
-                                                    {[{ label: 'Exact dates', val: 0 }, { label: '± 1 day', val: 1 }, { label: '± 2 days', val: 2 }, { label: '± 3 days', val: 3 }, { label: '± 7 days', val: 7 }].map((opt, idx) => (
-                                                        <button
-                                                            key={idx}
-                                                            type="button"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                setQuickSelectDays(opt.val);
-                                                            }}
-                                                            className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${(quickSelectDays === opt.val)
-                                                                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white border-transparent shadow-md'
-                                                                : 'border-gray-200 text-gray-600 hover:border-purple-300 hover:bg-purple-50'
-                                                                }`}
-                                                        >
-                                                            {opt.label}
-                                                        </button>
-                                                    ))}
-                                                </div>
-
-                                                {/* Right: Done Button */}
+                                            {/* Footer: Done Button Only (Clean Look) */}
+                                            <div className="flex items-center justify-end px-6 py-4 border-t border-gray-100 bg-white">
                                                 <button
                                                     type="button"
                                                     disabled={!startDate || !endDate}
@@ -465,9 +428,9 @@ const HeroSearch = () => {
                                                             dpRef.current.setOpen(false);
                                                         }
                                                     }}
-                                                    className={`px-6 py-2 font-bold rounded-lg shadow-md text-sm transition-all ${(!startDate || !endDate)
+                                                    className={`px-8 py-2.5 font-bold rounded-full text-sm transition-all shadow-md ${(!startDate || !endDate)
                                                         ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                                        : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white hover:shadow-lg transform active:scale-95'
+                                                        : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transform active:scale-95'
                                                         }`}
                                                 >
                                                     Done
