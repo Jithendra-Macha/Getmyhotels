@@ -51,6 +51,13 @@ class Hotel(HotelBase):
     amenities: List[str] = []
     payment_options: List[str] = []
     coordinates: Optional[dict] = None
+    taxes_and_fees: Optional[float] = 0
+    ai_tagline: Optional[str] = "Great Choice"
+    sustainability_score: Optional[float] = 0
+    deal_tag: Optional[str] = None
+    reviews: Optional[int] = 0
+    is_boutique: Optional[bool] = False
+    fair_rank_boost: Optional[bool] = False
     
     class Config:
         orm_mode = True
