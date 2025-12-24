@@ -30,6 +30,9 @@ const HeroSearch = () => {
     // Date Picker State
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
+    // Temp state for keying calendar interaction without live updates
+    const [tempDateRange, setTempDateRange] = useState(dateRange);
+    const [tempStartDate, tempEndDate] = tempDateRange;
     const [calendarTab, setCalendarTab] = useState('calendar'); // 'calendar' or 'flexible'
     const [quickSelectDays, setQuickSelectDays] = useState(null);
 
@@ -181,102 +184,7 @@ const HeroSearch = () => {
 
     return (
         <div className="w-full max-w-7xl mx-auto -mt-16 relative z-10 px-4 sm:px-6">
-            <style>{`
-                .react-datepicker-wrapper { width: 100%; }
-                .react-datepicker__input-container input { 
-                    width: 100%; 
-                    background: transparent; 
-                    border: none; 
-                    font-weight: 600; 
-                    color: #111827; 
-                    padding: 1rem 0.75rem 1rem 2.5rem;
-                }
-                .react-datepicker__input-container input:focus { outline: none; box-shadow: none; }
-                .react-datepicker-popper { 
-                    z-index: 9999 !important; 
-                    padding-top: 10px; /* Spacing */
-                }
-                
-                /* Layout: Force Flex Row */
-                .react-datepicker { 
-                    font-family: inherit; 
-                    border: none; 
-                    background-color: transparent;
-                    display: flex !important;
-                    flex-direction: row !important;
-                }
-                
-                /* Month Container */
-                .react-datepicker__month-container {
-                    float: none !important;
-                    background: white;
-                    width: 330px; /* Fixed width per month */
-                    margin: 0 10px;
-                    display: block !important; /* Reset flex col from previous attempts if any */
-                }
-
-                .react-datepicker__header { 
-                    background-color: white; 
-                    border-bottom: none; 
-                    padding-top: 1.5rem; 
-                    position: relative;
-                }
-
-                /* Weekdays (Su, Mo, Tu...) */
-                .react-datepicker__day-name { 
-                    color: #64748b; 
-                    font-weight: 600; 
-                    width: 2.5rem; 
-                    line-height: 2.5rem;
-                    margin: 0.166rem; /* Align with days */
-                    text-transform: uppercase;
-                    font-size: 0.75rem;
-                }
-
-                /* Days */
-                .react-datepicker__day { 
-                    width: 2.5rem; 
-                    line-height: 2.5rem; 
-                    margin: 0.166rem;
-                    font-weight: 500;
-                    color: #1e293b;
-                }
-
-                /* Selected Date Gradient */
-                .react-datepicker__day--selected, 
-                .react-datepicker__day--in-selecting-range, 
-                .react-datepicker__day--in-range {
-                    background: linear-gradient(to right, #2563eb, #9333ea) !important;
-                    color: white !important;
-                    border-radius: 9999px; /* Circle/Pill */
-                }
-                .react-datepicker__day--in-selecting-range:not(.react-datepicker__day--in-range) {
-                    background-color: rgba(147, 51, 234, 0.1) !important; 
-                    color: #1e293b !important; /* Keep text dark in range */
-                    border-radius: 9999px;
-                }
-                .react-datepicker__day--range-start,
-                .react-datepicker__day--range-end {
-                    background: linear-gradient(to right, #2563eb, #9333ea) !important;
-                    color: white !important;
-                }
-
-                .react-datepicker__day--keyboard-selected { background-color: transparent !important; color: inherit !important; }
-                .react-datepicker__day:hover { background-color: #f3f4f6 !important; border-radius: 9999px; }
-                .react-datepicker__day--disabled { color: #cbd5e1 !important; pointer-events: none; }
-
-                /* Navigation Arrows - Custom Positioning to align with Month Title */
-                .react-datepicker__navigation { top: 25px; }
-                .react-datepicker__navigation--previous { left: 20px; }
-                .react-datepicker__navigation--next { right: 20px; }
-                
-                .react-datepicker__current-month { 
-                    font-size: 1rem; 
-                    font-weight: 800; 
-                    color: #111827; 
-                    margin-bottom: 1rem; 
-                }
-            `}</style>
+            pass
 
             {/* Category Navigation - Minimal & Clean */}
             <div className="flex gap-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
@@ -384,7 +292,10 @@ const HeroSearch = () => {
                                     {/* Input Trigger */}
                                     <div
                                         className="w-full flex items-center cursor-pointer"
-                                        onClick={() => setShowCalendar(true)}
+                                        onClick={() => {
+                                            if (!showCalendar) setTempDateRange(dateRange);
+                                            setShowCalendar(true);
+                                        }}
                                     >
                                         <input
                                             readOnly
