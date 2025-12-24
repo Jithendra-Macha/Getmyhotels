@@ -74,6 +74,11 @@ class RoomCreate(RoomBase):
 class Room(RoomBase):
     id: Union[int, str]
     hotel_id: Union[int, str]
+    images: List[str] = []
+    bed_type: Optional[str] = "1 King Bed"
+    size_sqft: Optional[int] = 300
+    cancellation_policy: Optional[str] = "Non Refundable"
+    breakfast_included: Optional[bool] = False
 
     class Config:
         orm_mode = True

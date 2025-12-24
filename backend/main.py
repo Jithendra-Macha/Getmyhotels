@@ -263,9 +263,45 @@ def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
                 "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80"
             ],
             rooms=[
-                schemas.Room(id=1, hotel_id=hotel.id, name="Standard King Room", capacity=2, price=hotel.price_per_night, available=True),
-                schemas.Room(id=2, hotel_id=hotel.id, name="Double Queen Suite", capacity=4, price=hotel.price_per_night * 1.5, available=True),
-                schemas.Room(id=3, hotel_id=hotel.id, name="Executive Penthouse", capacity=2, price=hotel.price_per_night * 2.5, available=True)
+                schemas.Room(
+                    id=1, 
+                    hotel_id=hotel.id, 
+                    name="Standard King Room - Non-Smoking", 
+                    capacity=2, 
+                    price=hotel.price_per_night, 
+                    available=True,
+                    bed_type="1 King Bed",
+                    size_sqft=300,
+                    cancellation_policy="Non Refundable",
+                    breakfast_included=True,
+                    images=["https://images.unsplash.com/photo-1631049307204-6c0b9n3b3b0d?auto=format&fit=crop&w=800&q=80"]
+                ),
+                schemas.Room(
+                    id=2, 
+                    hotel_id=hotel.id, 
+                    name="Double Queen Suite - City View", 
+                    capacity=4, 
+                    price=hotel.price_per_night * 1.5, 
+                    available=True,
+                    bed_type="2 Queen Beds",
+                    size_sqft=450,
+                    cancellation_policy="Free Cancellation",
+                    breakfast_included=True,
+                    images=["https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80"]
+                ),
+                schemas.Room(
+                    id=3, 
+                    hotel_id=hotel.id, 
+                    name="Executive Penthouse", 
+                    capacity=2, 
+                    price=hotel.price_per_night * 2.5, 
+                    available=True,
+                    bed_type="1 King Bed",
+                    size_sqft=800,
+                    cancellation_policy="Free Cancellation",
+                    breakfast_included=False,
+                    images=["https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"]
+                )
             ],
             faqs=[
                 {"q": "Is breakfast included?", "a": "Yes, we offer a complimentary continental breakfast served daily from 6 AM to 10 AM."},
@@ -311,11 +347,40 @@ def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
                     name=r.get('name', 'Standard Room'), 
                     capacity=2, 
                     price=float(r.get('rate', {}).get('price', 0)), 
-                    available=True
+                    available=True,
+                    bed_type="1 King Bed",
+                    size_sqft=300,
+                    cancellation_policy="Non Refundable",
+                    breakfast_included=True,
+                    images=["https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80"]
                 ) for i, r in enumerate(prop.get('rooms', [])[:5], start=1)
             ] or [
-                 schemas.Room(id=1, hotel_id=0, name="Standard Room", capacity=2, price=150.0, available=True),
-                 schemas.Room(id=2, hotel_id=0, name="Deluxe Suite", capacity=3, price=250.0, available=True)
+                 schemas.Room(
+                     id=1, 
+                     hotel_id=0, 
+                     name="Standard King Room", 
+                     capacity=2, 
+                     price=150.0, 
+                     available=True,
+                     bed_type="1 King Bed",
+                     size_sqft=300,
+                     cancellation_policy="Non Refundable",
+                     breakfast_included=True,
+                     images=["https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=800&q=80"]
+                 ),
+                 schemas.Room(
+                     id=2, 
+                     hotel_id=0, 
+                     name="Double Queen Room", 
+                     capacity=4, 
+                     price=250.0, 
+                     available=True,
+                     bed_type="2 Queen Beds",
+                     size_sqft=380,
+                     cancellation_policy="Free Cancellation",
+                     breakfast_included=True,
+                     images=["https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=800&q=80"]
+                 )
             ],
             faqs=[
                 {"q": "What is the check-in time?", "a": "Check-in is at 3:00 PM."},
