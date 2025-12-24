@@ -13,24 +13,14 @@ const fallbackDestinations = [
 ];
 
 const ExploreCarousel = () => {
-    // Initialize with fallback data so it's never empty
-    const [destinations, setDestinations] = useState(fallbackDestinations);
+    // Use static data directly to ensure high-quality images and avoid broken links from backend
+    // const [destinations, setDestinations] = useState(fallbackDestinations);
+    const destinations = fallbackDestinations;
     const scrollRef = useRef(null);
 
-    useEffect(() => {
-        // Try to fetch dynamic data from backend
-        fetch('https://getmyhotels-backend.vercel.app/destinations')
-            .then(res => res.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    setDestinations(data);
-                }
-            })
-            .catch(err => {
-                console.log("Using fallback destinations (backend offline or on prod)");
-                // No action needed, already showing fallback
-            });
-    }, []);
+    // useEffect(() => {
+    //     // Backend fetch removed to prioritize local high-quality images
+    // }, []);
 
     const scroll = (direction) => {
         if (scrollRef.current) {
