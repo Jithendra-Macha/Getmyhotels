@@ -26,6 +26,10 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
+@app.get("/")
+def read_root():
+    return {"status": "ok", "message": "GetMyHotels API is running"}
+
 @app.post("/signup", response_model=schemas.Token)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # Check if email exists
@@ -242,6 +246,36 @@ def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
     # Check if ID is likely from Local DB (numeric)
     if hotel_id.isdigit():
         hotel = db.query(models.Hotel).filter(models.Hotel.id == int(hotel_id)).first()
+        
+        # DEMO FALLBACK: If DB is empty on Render, return reliable mock data for ID 1
+        if not hotel and hotel_id == "1":
+            return schemas.HotelDetail(
+                id=1,
+                name="Grand Plaza Hotel (Demo)",
+                location="Manhattan, New York",
+                description="Experience the ultimate luxury in the heart of NYC, featuring skyline views and world-class amenities.",
+                rating=4.9,
+                image_url="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3",
+                price_per_night=350,
+                long_description="Welcome to Grand Plaza, where luxury meets convenience. Located steps away from Central Park, our property offers an escape from the city bustle while keeping you connected to the heartbeat of New York.",
+                amenities=["Free High-Speed WiFi", "Rooftop Pool", "Luxury Spa", "Fitness Center", "Gourmet Dining"],
+                images=[
+                    "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1596436889106-be35e843f974?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                rooms=[
+                    schemas.Room(id=101, hotel_id=1, name="Standard King Room", capacity=2, price=350, available=True, bed_type="1 King Bed", size_sqft=350, cancellation_policy="Free Cancellation", breakfast_included=True, images=["https://images.unsplash.com/photo-1631049307204-6c0b9n3b3b0d?auto=format&fit=crop&w=800&q=80"]),
+                    schemas.Room(id=102, hotel_id=1, name="Double Queen Suite", capacity=4, price=550, available=True, bed_type="2 Queen Beds", size_sqft=500, cancellation_policy="Free Cancellation", breakfast_included=True, images=["https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80"]),
+                    schemas.Room(id=103, hotel_id=1, name="Executive Penthouse", capacity=2, price=1200, available=True, bed_type="1 King Bed", size_sqft=900, cancellation_policy="Non Refundable", breakfast_included=True, images=["https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80"])
+                ],
+                local_insights=[{"title": "Best Coffee: Daily Grind", "type": "Dining"}, {"title": "Central Park Walk", "type": "Nature"}],
+                faqs=[{"question": "Check-in time?", "answer": "3:00 PM"}, {"question": "Pool hours?", "answer": "8 AM - 10 PM"}],
+                policies=[{"title": "Smoking", "description": "Non-smoking property"}]
+            )
+
         if not hotel:
             raise HTTPException(status_code=404, detail="Hotel not found in Local DB")
         # Enhance local hotel with some mock details if missing
