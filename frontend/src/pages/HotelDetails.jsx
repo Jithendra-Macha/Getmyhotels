@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-// import { hotelData } from '../mocks/hotelData'; // Removed mock
 
 // Components
-import HotelHero from '../components/Hotel/HotelHero';
-import ImageGallery from '../components/Hotel/ImageGallery';
+import ImmersiveHero from '../components/Hotel/ImmersiveHero';
+import StickySubNav from '../components/Hotel/StickySubNav';
 import PricingWidget from '../components/Hotel/PricingWidget';
 import RoomCard from '../components/RoomCard';
 import AmenitiesSection from '../components/Hotel/AmenitiesSection';
@@ -54,60 +53,93 @@ const HotelDetails = () => {
     if (error || !hotel) return <div className="min-h-screen flex items-center justify-center text-red-500">Error: {error || 'Hotel not found'}</div>;
 
     return (
-        <div className="min-h-screen bg-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="min-h-screen bg-white pb-20 font-sans">
+            {/* 1. Immersive Hero Header */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                {/* New Header Layout */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                    <div>
+                        <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 tracking-tight leading-tight mb-2">
+                            {hotel.name}
+                        </h1>
+                        <div className="flex flex-wrap items-center text-gray-500 gap-x-4 gap-y-2 text-sm md:text-base">
+                            <span className="flex items-center gap-1 text-gray-900 font-bold bg-gray-100 px-2 py-1 rounded-md">
+                                ⭐ {hotel.rating}
+                            </span>
+                            <span className="flex items-center gap-1">
+                                📍 {hotel.location}
+                            </span>
+                            <span className="text-blue-600 font-medium hover:underline cursor-pointer">
+                                Show on map
+                            </span>
+                        </div>
+                    </div>
+                    {/* Price Peek for Mobile Header */}
+                    <div className="md:hidden">
+                        <span className="text-2xl font-bold text-gray-900">${hotel.price_per_night}</span>
+                        <span className="text-gray-500 text-sm">/night</span>
+                    </div>
+                </div>
 
-                {/* 1. Hero Banner */}
-                <HotelHero hotel={hotel} />
+                <ImmersiveHero
+                    images={hotel.images}
+                    hotelName={hotel.name}
+                />
+            </div>
 
-                {/* 2. Photo Gallery */}
-                <ImageGallery mainImage={hotel.image_url} hotelName={hotel.name} />
+            {/* 2. Sticky Sub Nav */}
+            <StickySubNav hotelName={hotel.name} price={hotel.price_per_night} />
 
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
                 <div className="flex flex-col lg:flex-row gap-12 relative">
                     {/* LEFT COLUMN - Main Content */}
-                    <div className="lg:w-2/3">
+                    <div className="lg:w-[65%] space-y-16">
 
-                        {/* 3. At-a-Glance Summary */}
-                        <div className="mb-10">
+                        {/* Overview Section */}
+                        <div id="overview" className="scroll-mt-32">
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">About the stay</h2>
-                            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+                            <p className="text-lg text-gray-700 leading-relaxed whitespace-pre-line">
                                 {hotel.long_description || hotel.description}
                             </p>
 
+                            <div className="mt-8">
+                                <BrandHighlights />
+                            </div>
                         </div>
 
-                        {/* 7. Why We Love This (Brand Highlights) */}
-                        <BrandHighlights />
-
-                        {/* 5. Room Types */}
-                        <div className="mb-12" id="rooms">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Choose your room</h2>
-                            {hotel.rooms && hotel.rooms.length > 0 ? (
-                                hotel.rooms.map(room => (
-                                    <RoomCard key={room.id} room={room} hotelId={hotel.id} />
-                                ))
-                            ) : (
-                                <p>No rooms available.</p>
-                            )}
+                        {/* Amenities */}
+                        <div id="amenities" className="scroll-mt-32">
+                            <AmenitiesSection amenities={hotel.amenities} />
                         </div>
 
-                        {/* 6. Amenities */}
-                        <AmenitiesSection amenities={hotel.amenities} />
+                        {/* Rooms */}
+                        <div id="rooms" className="scroll-mt-32 pt-4">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+                                Available Rooms
+                            </h2>
+                            <div className="space-y-6">
+                                {hotel.rooms && hotel.rooms.length > 0 ? (
+                                    hotel.rooms.map(room => (
+                                        <RoomCard key={room.id} room={room} hotelId={hotel.id} />
+                                    ))
+                                ) : (
+                                    <p>No rooms available.</p>
+                                )}
+                            </div>
+                        </div>
 
-                        {/* 8. Local Insight */}
-                        <LocalInsights />
+                        {/* Local Insights */}
+                        <LocalInsights insights={hotel.local_insights} />
 
-                        {/* 9. Reviews */}
-                        <ReviewsSection
-                            rating={hotel.rating}
-                            count={hotel.reviewsCount || 0}
-                            distribution={hotel.reviewDistribution || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }}
-                        />
+                        {/* Reviews */}
+                        <div id="reviews" className="scroll-mt-32">
+                            <ReviewsSection rating={hotel.rating} count={hotel.reviews} />
+                        </div>
 
-                        {/* 10. Map & Nearby (Simple Embed for Demo) */}
-                        <div className="py-8 border-t border-gray-100">
+                        {/* Map */}
+                        <div id="location" className="scroll-mt-32 py-8 border-t border-gray-100">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Explore the Neighborhood</h2>
-                            <div className="rounded-xl overflow-hidden h-96 bg-gray-100 relative">
+                            <div className="rounded-2xl overflow-hidden h-96 bg-gray-100 relative shadow-inner">
                                 <iframe
                                     title="map"
                                     width="100%"
@@ -121,46 +153,44 @@ const HotelDetails = () => {
                                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur p-4 rounded-xl shadow-lg max-w-xs border border-gray-200">
                                     <h4 className="font-bold mb-3 text-gray-900 flex items-center">
                                         <span className="bg-green-100 p-1 rounded-full mr-2">📍</span>
-                                        Nearby Spots
+                                        Nearby
                                     </h4>
                                     <ul className="text-sm space-y-3">
-                                        {hotel.distances?.map((d, i) => (
-                                            <li key={i} className="flex justify-between items-center group cursor-pointer hover:bg-gray-50 p-1 rounded transition-colors">
-                                                <div className="flex flex-col">
-                                                    <span className="font-medium text-gray-900">{d.to}</span>
-                                                    <span className="text-xs text-gray-500">{d.type}</span>
-                                                </div>
-                                                <span className="font-bold text-primary bg-blue-50 px-2 py-1 rounded text-xs">{d.walkTime}</span>
+                                        {hotel.local_insights?.map((d, i) => (
+                                            <li key={i} className="flex justify-between items-start">
+                                                <span className="font-medium text-gray-900">{d.title}</span>
                                             </li>
-                                        ))}
+                                        )).slice(0, 3)}
                                     </ul>
-                                    <div className="mt-3 pt-3 border-t border-gray-100 text-center">
-                                        <a href={`https://maps.google.com/?q=${hotel.address}`} target="_blank" rel="noopener noreferrer" className="text-xs text-primary font-bold hover:underline">
-                                            Open in Google Maps ↗
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* 11. Policies */}
-                        <HotelPolicies />
-
-                        {/* 12. FAQ */}
-                        <FaqSection />
-
+                        <HotelPolicies policies={hotel.policies} />
+                        <FaqSection faqs={hotel.faqs} />
                     </div>
 
-                    {/* RIGHT COLUMN - Sticky Booking Widget (Desktop) */}
-                    <div className="hidden lg:block lg:w-1/3 relative">
-                        <PricingWidget basePrice={hotel.price_per_night} />
+                    {/* RIGHT COLUMN - Sticky Booking Widget */}
+                    <div className="hidden lg:block lg:w-[35%] relative">
+                        <div className="sticky top-28 space-y-6">
+                            <PricingWidget basePrice={hotel.price_per_night} />
+
+                            {/* Trust Card */}
+                            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+                                <h3 className="font-bold text-gray-900 mb-2">Why book with us?</h3>
+                                <ul className="space-y-2 text-sm text-gray-600">
+                                    <li className="flex gap-2">✓ Lowest price guarantee</li>
+                                    <li className="flex gap-2">✓ No hidden fees</li>
+                                    <li className="flex gap-2">✓ 24/7 Customer support</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            {/* 13. Sticky Booking Bar (Mobile) */}
+            {/* Mobile Sticky Bar */}
             <StickyBookingBar price={hotel.price_per_night} />
-
         </div>
     );
 };
