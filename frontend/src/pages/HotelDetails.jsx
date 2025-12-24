@@ -25,16 +25,20 @@ const HotelDetails = () => {
             try {
                 // Auto-detect environment
                 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                const apiUrl = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8000' : 'https://getmyhotels-com.onrender.com');
+                // Prioritize Env Var, then fallback based on domain
+                const envApiUrl = import.meta.env.VITE_API_URL;
+                const apiUrl = (envApiUrl && envApiUrl.length > 0)
+                    ? envApiUrl
+                    : (isLocal ? 'http://localhost:8000' : 'https://getmyhotels-com.onrender.com');
 
                 const response = await fetch(`${apiUrl}/hotels/${id}`);
-                if (!response.ok) throw new Error('Failed to fetch hotel details');
+                if (!response.ok) throw new Error(`Failed to fetch hotel details (${response.status})`);
 
                 const data = await response.json();
                 setHotel(data);
             } catch (err) {
                 console.error(err);
-                setError(err.message);
+                setError(`${err.message}`);
             } finally {
                 setLoading(false);
             }
@@ -50,7 +54,21 @@ const HotelDetails = () => {
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
     );
-    if (error || !hotel) return <div className="min-h-screen flex items-center justify-center text-red-500">Error: {error || 'Hotel not found'}</div>;
+    if (error || !hotel) return (
+        <div className="min-h-screen flex flex-col items-center justify-center text-center p-4">
+            <div className="text-red-500 text-xl font-bold mb-2">Error Loading Hotel</div>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <p className="text-xs text-gray-400 mb-6">
+                Try refreshing or check your connection.
+            </p>
+            <button
+                onClick={() => window.location.reload()}
+                className="bg-gray-900 text-white px-6 py-2 rounded-lg font-bold hover:bg-black transition-colors"
+            >
+                Retry
+            </button>
+        </div>
+    );
 
     return (
         <div className="min-h-screen bg-white pb-20 font-sans">
