@@ -137,7 +137,14 @@ def search_hotels_endpoint(
                         price_per_night=float(prop.get('min_rate', {}).get('price', prop.get('rate', {}).get('price', 0))),
                         amenities=[a.get('name') for a in prop.get('amenities', [])[:5]],
                         payment_options=["Pay Now"], # Xeni usually requires payment
-                        coordinates=prop.get('coordinates', None) # Pass through if available
+                        coordinates=prop.get('coordinates', None), # Pass through if available
+                        taxes_and_fees=float(prop.get('min_rate', {}).get('price', 0)) * 0.15,
+                        ai_tagline="Perfect for your stay",
+                        sustainability_score=8.5,
+                        deal_tag="Best Seller",
+                        reviews=124,
+                        is_boutique=True,
+                        fair_rank_boost=True
                     ))
                 
                 if hotels:
@@ -174,9 +181,16 @@ def search_hotels_endpoint(
                         rating=float(hotel.get("StarRating", 0)),
                         image_url=hotel.get("HotelPicture", "") or hotel.get("HotelCoverImage", "https://via.placeholder.com/400x300"),
                         price_per_night=price,
-                        amenities=["Free WiFi", "Breakfast"], # TBO returns this in deep details, mocking for list view speed
+                        amenities=["Free WiFi", "Breakfast", "Pool", "Spa"], # Mock amenities
                         payment_options=["Pay Later", "Pay Now"],
-                        coordinates={"lat": 40.7128, "lng": -74.0060} # Mock NY coordinates if missing
+                        coordinates={"lat": 40.7128, "lng": -74.0060}, # Mock NY coordinates if missing
+                        taxes_and_fees=price * 0.18,
+                        ai_tagline="Great Value Choice",
+                        sustainability_score=7,
+                        deal_tag="Standard Rate",
+                        reviews=85,
+                        is_boutique=False,
+                        fair_rank_boost=False
                     ))
                 
                 if hotels:
@@ -196,7 +210,32 @@ def search_hotels_endpoint(
     if location:
         query = query.filter(models.Hotel.location.ilike(f"%{location}%"))
     
-pass
+    # Execute Local DB query
+    db_hotels = query.all()
+    results = []
+    for h in db_hotels:
+        results.append(schemas.Hotel(
+            id=h.id,
+            name=h.name,
+            location=h.location,
+            description=h.description,
+            rating=h.rating,
+            image_url=h.image_url,
+            price_per_night=h.price_per_night,
+            # Enhanced Fields for Advanced Card
+            taxes_and_fees=h.price_per_night * 0.15,
+            amenities=["Free WiFi", "Pool", "Spa", "Gym", "Restaurant"] if not hasattr(h, 'amenities') else h.amenities, # Mock
+            payment_options=["Pay at Hotel", "Card"],
+            coordinates={"lat": 40.7061, "lng": -73.9969}, # Mock Brooklyn
+            ai_tagline="Local Favorite",
+            sustainability_score=9,
+            deal_tag="Exclusive Deal",
+            reviews=240,
+            is_boutique=True,
+            fair_rank_boost=True
+        ))
+    
+    return results
 
 @app.get("/hotels/{hotel_id}", response_model=schemas.HotelDetail)
 def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
