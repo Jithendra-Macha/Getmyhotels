@@ -5,8 +5,8 @@ const fallbackDestinations = [
     { name: "Orlando", "properties": "5k+ stays", image: "https://images.unsplash.com/photo-1597466599360-3b9775841aec?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
     { name: "Las Vegas", "properties": "1.7k+ stays", image: "https://images.unsplash.com/photo-1605833556294-ea5c7a74f57d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
     { name: "New York", "properties": "3k+ stays", image: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
-    { name: "Atlanta", "properties": "2k+ stays", image: "https://images.unsplash.com/photo-1594902194883-9b9aa5ee5d92?auto=format&fit=crop&w=600&q=80" },
-    { name: "Myrtle Beach", "properties": "6k+ stays", "image": "https://images.unsplash.com/photo-1579782540608-aa866f81df68?auto=format&fit=crop&w=600&q=80" },
+    { name: "Atlanta", "properties": "2k+ stays", image: "https://images.unsplash.com/photo-1575960006323-5e3639a037b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
+    { name: "Myrtle Beach", "properties": "6k+ stays", "image": "https://images.unsplash.com/photo-1563693976-52eb321ad974?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
     { name: "Los Angeles", "properties": "4k+ stays", "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=600&q=80" },
     { name: "Chicago", "properties": "2.5k+ stays", "image": "https://images.unsplash.com/photo-1494522855154-9297ac14b55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" },
     { name: "San Francisco", "properties": "1.8k+ stays", "image": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" }
