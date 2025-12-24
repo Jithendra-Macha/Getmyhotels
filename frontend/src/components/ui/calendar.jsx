@@ -2,8 +2,7 @@ import * as React from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
 import { cn } from "@/lib/utils"
-// import "react-day-picker/dist/style.css"; // We are styling manually/via tailwind, but sometimes base styles help. 
-// Shadcn usually implements custom classNames directly.
+import "react-day-picker/style.css"; // Essential for v9 structure if custom styles miss something
 
 export function Calendar({
     className,
@@ -27,10 +26,12 @@ export function Calendar({
                 nav_button_previous: "absolute left-1",
                 nav_button_next: "absolute right-1",
                 table: "w-full border-collapse space-y-1",
-                head_row: "flex",
+                head_row: "flex", // v8
+                weekdays: "flex", // v9 likely
                 head_cell:
                     "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-                row: "flex w-full mt-2",
+                row: "flex w-full mt-2", // v8
+                week: "flex w-full mt-2 justify-center", // v9 likely
                 cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
                 day: cn(
                     "h-9 w-9 p-0 font-normal aria-selected:opacity-100 hover:bg-gray-100 rounded-md transition-colors flex items-center justify-center cursor-pointer"
