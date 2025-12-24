@@ -108,6 +108,9 @@ class HotelDetail(Hotel):
     amenities: List[str] = []
     images: List[str] = []
     rooms: List[Room] = []
+    faqs: List[dict] = []
+    policies: List[dict] = []
+    local_insights: List[dict] = []
 
 class AIPlanRequest(BaseModel):
     prompt: str

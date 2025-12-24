@@ -253,10 +253,35 @@ def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
             rating=hotel.rating,
             image_url=hotel.image_url,
             price_per_night=hotel.price_per_night,
-            long_description=hotel.description * 3, # Mock long desc
-            amenities=["Free WiFi", "Parking", "Pool", "Gym"],
-            images=[hotel.image_url, "https://via.placeholder.com/800x600"],
-            rooms=[] # Mock rooms or fetch from relation
+            long_description=hotel.description * 3 if len(hotel.description) < 100 else hotel.description,
+            amenities=["Free WiFi", "Parking", "Pool", "Gym", "Restaurant", "Bar", "Spa", "24/7 Front Desk"],
+            images=[
+                hotel.image_url,
+                "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=1200&q=80",
+                "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80"
+            ],
+            rooms=[
+                schemas.Room(id=1, hotel_id=hotel.id, name="Standard King Room", capacity=2, price=hotel.price_per_night, available=True),
+                schemas.Room(id=2, hotel_id=hotel.id, name="Double Queen Suite", capacity=4, price=hotel.price_per_night * 1.5, available=True),
+                schemas.Room(id=3, hotel_id=hotel.id, name="Executive Penthouse", capacity=2, price=hotel.price_per_night * 2.5, available=True)
+            ],
+            faqs=[
+                {"q": "Is breakfast included?", "a": "Yes, we offer a complimentary continental breakfast served daily from 6 AM to 10 AM."},
+                {"q": "Is parking available?", "a": "We offer valet parking for $35/night. Self-parking is available at a nearby garage."},
+                {"q": "Do you allow pets?", "a": "Yes, we are pet-friendly! A one-time cleaning fee of $50 applies per stay."}
+            ],
+            policies=[
+                {"title": "Check-in / Check-out", "description": "Check-in: 3:00 PM • Check-out: 11:00 AM"},
+                {"title": "Cancellation", "description": "Free cancellation up to 48 hours before check-in."},
+                {"title": "Smoking", "description": "This is a 100% non-smoking property."}
+            ],
+            local_insights=[
+                {"icon": "☕", "title": "Best Coffee", "text": "Visit 'The Daily Grind' just around the corner for the best espresso in town."},
+                {"icon": "🌳", "title": "Morning Walk", "text": "Central Park is only a 10-minute walk away, perfect for a morning jog."},
+                {"icon": "🍽️", "title": "Dinner Spot", "text": "For dinner, we recommend 'La Trattoria' for authentic Italian cuisine."}
+            ]
         )
 
     # Otherwise, try Xeni API
@@ -269,13 +294,7 @@ def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
         
         # Map Xeni to Schema
         return schemas.HotelDetail(
-            id=0, # Use hash or handle string ID in schema if needed (or keep 0 for simplified view)
-            # Schema expects int ID currently, which is a limitation. 
-            # ideally we update Hotel schema to allow str ID.
-            # providing 0 for now to satisfy int validation if possible, or we need to update HotelBase ID type.
-            # Actually, `id` in Hotel schema is int. We should probably update that too or map hash.
-            # Let's map a fake INT id for now to pass validation, or strictly modify schema to allow str.
-            # Modifying schema to allow str ID is better long term.
+            id=0, 
             name=prop.get('name', 'Unknown Hotel'),
             location=prop.get('address', {}).get('address_line_1', 'Unknown Address'),
             description=prop.get('overview', {}).get('description', 'No description'),
@@ -294,6 +313,24 @@ def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
                     price=float(r.get('rate', {}).get('price', 0)), 
                     available=True
                 ) for i, r in enumerate(prop.get('rooms', [])[:5], start=1)
+            ] or [
+                 schemas.Room(id=1, hotel_id=0, name="Standard Room", capacity=2, price=150.0, available=True),
+                 schemas.Room(id=2, hotel_id=0, name="Deluxe Suite", capacity=3, price=250.0, available=True)
+            ],
+            faqs=[
+                {"q": "What is the check-in time?", "a": "Check-in is at 3:00 PM."},
+                {"q": "Is Wi-Fi free?", "a": "Yes, high-speed Wi-Fi is included for all guests."},
+                {"q": "Do you have a pool?", "a": "Please check the amenities section for pool availability."}
+            ],
+            policies=[
+                {"title": "Check-in", "description": "3:00 PM"},
+                {"title": "Check-out", "description": "11:00 AM"},
+                {"title": "Pets", "description": "Please contact the property directly regarding pet policies."}
+            ],
+            local_insights=[
+                {"icon": "📍", "title": "Location", "text": "Located in the heart of the city, close to major transit hubs."},
+                {"icon": "🛍️", "title": "Shopping", "text": "Major shopping districts are within walking distance."},
+                {"icon": "🍝", "title": "Dining", "text": "Surrounded by top-rated local restaurants and bars."}
             ]
         )
             
