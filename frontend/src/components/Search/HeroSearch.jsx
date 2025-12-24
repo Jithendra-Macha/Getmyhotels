@@ -331,12 +331,19 @@ const HeroSearch = () => {
                                                     }}
                                                     numberOfMonths={2}
                                                     initialFocus
+                                                    captionLayout="dropdown-buttons"
+                                                    fromYear={2025}
+                                                    toYear={2028}
+                                                    fromDate={new Date()}
                                                     classNames={{
                                                         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-8 sm:space-y-0",
                                                         month: "space-y-4",
                                                         caption: "flex justify-center pt-1 relative items-center text-gray-900",
-                                                        caption_label: "text-lg font-bold",
-                                                        nav: "space-x-1 flex items-center bg-white",
+                                                        caption_label: "text-lg font-bold hidden", // Hide label when using dropdowns
+                                                        caption_dropdowns: "flex justify-center gap-2 px-2", // Container for dropdowns
+                                                        dropdown: "bg-white border border-gray-200 rounded-md px-2 py-1 text-sm font-bold text-gray-700 hover:bg-gray-50 cursor-pointer shadow-sm outline-none focus:ring-2 focus:ring-blue-500",
+                                                        dropdown_icon: "",
+                                                        nav: "space-x-1 flex items-center bg-white absolute right-0", // Move nav to right if dropdowns center
                                                         nav_button: "h-8 w-8 bg-white border border-gray-200 text-gray-600 p-0 hover:bg-gray-50 rounded-lg transition-colors flex items-center justify-center shadow-sm",
                                                         table: "w-full border-collapse space-y-1",
                                                         head_row: "flex mb-2",
@@ -347,7 +354,7 @@ const HeroSearch = () => {
                                                         day_selected: "bg-blue-600 text-white hover:bg-blue-700 hover:text-white focus:bg-blue-600 focus:text-white font-bold shadow-md",
                                                         day_today: "bg-gray-100 text-gray-900 font-bold border border-gray-200",
                                                         day_outside: "text-gray-300 opacity-50",
-                                                        day_disabled: "text-gray-300 opacity-50",
+                                                        day_disabled: "text-gray-300 opacity-50 bg-gray-50 cursor-not-allowed",
                                                         day_range_middle: "aria-selected:bg-blue-50 aria-selected:text-blue-700 rounded-none",
                                                         day_hidden: "invisible",
                                                     }}
