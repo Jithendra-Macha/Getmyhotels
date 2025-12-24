@@ -1,6 +1,5 @@
 ```
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import usePlacesAutocomplete, {
     getGeocode,
     getLatLng,
@@ -118,7 +117,7 @@ const HeroSearch = () => {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${ token } `
+                                'Authorization': 'Bearer ' + token
                             },
                             body: JSON.stringify({
                                 location: value,
