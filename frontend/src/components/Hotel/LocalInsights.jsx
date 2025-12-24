@@ -1,8 +1,8 @@
 import React from 'react';
 
-const LocalInsights = () => {
-    // Hardcoded for "Brooklyn" demo as requested
-    const tips = [
+const LocalInsights = ({ insights }) => {
+    // Hardcoded for "Brooklyn" demo fallback
+    const defaultTips = [
         {
             icon: "🥯",
             title: "Skip the bodega line",
@@ -20,6 +20,8 @@ const LocalInsights = () => {
         }
     ];
 
+    const tips = (insights && insights.length > 0) ? insights : defaultTips;
+
     return (
         <div className="py-8 border-t border-gray-100">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Local Insights</h2>
@@ -34,7 +36,7 @@ const LocalInsights = () => {
                     </div>
                 ))}
             </div>
-            <p className="text-xs text-gray-400 mt-4 text-center">Curated by our local Brooklyn team</p>
+            <p className="text-xs text-gray-400 mt-4 text-center">Curated by our local team</p>
         </div>
     );
 };
