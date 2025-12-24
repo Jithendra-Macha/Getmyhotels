@@ -48,6 +48,9 @@ from typing import List, Optional, Union
 
 class Hotel(HotelBase):
     id: Union[int, str]
+    amenities: List[str] = []
+    payment_options: List[str] = []
+    coordinates: Optional[dict] = None
     
     class Config:
         orm_mode = True

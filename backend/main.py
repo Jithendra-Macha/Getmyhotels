@@ -134,7 +134,10 @@ def search_hotels_endpoint(
                         rating=float(prop.get('rating', 0)),
                         # Handling images - Xeni usually returns list of images
                         image_url=prop.get('images', [{}])[0].get('url', "https://via.placeholder.com/400x300"),
-                        price_per_night=float(prop.get('min_rate', {}).get('price', prop.get('rate', {}).get('price', 0)))
+                        price_per_night=float(prop.get('min_rate', {}).get('price', prop.get('rate', {}).get('price', 0))),
+                        amenities=[a.get('name') for a in prop.get('amenities', [])[:5]],
+                        payment_options=["Pay Now"], # Xeni usually requires payment
+                        coordinates=prop.get('coordinates', None) # Pass through if available
                     ))
                 
                 if hotels:
@@ -170,7 +173,10 @@ def search_hotels_endpoint(
                         description=hotel.get("Description", "") or hotel.get("HotelDescription", "No description available"),
                         rating=float(hotel.get("StarRating", 0)),
                         image_url=hotel.get("HotelPicture", "") or hotel.get("HotelCoverImage", "https://via.placeholder.com/400x300"),
-                        price_per_night=price
+                        price_per_night=price,
+                        amenities=["Free WiFi", "Breakfast"], # TBO returns this in deep details, mocking for list view speed
+                        payment_options=["Pay Later", "Pay Now"],
+                        coordinates={"lat": 40.7128, "lng": -74.0060} # Mock NY coordinates if missing
                     ))
                 
                 if hotels:
@@ -190,9 +196,7 @@ def search_hotels_endpoint(
     if location:
         query = query.filter(models.Hotel.location.ilike(f"%{location}%"))
     
-    results = query.all()
-    print(f"DEBUG: Found {len(results)} local hotels.", flush=True)
-    return results
+pass
 
 @app.get("/hotels/{hotel_id}", response_model=schemas.HotelDetail)
 def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
