@@ -311,10 +311,10 @@ const HeroSearch = () => {
                                     {/* Dropdown Popover */}
                                     {showCalendar && (
                                         <div
-                                            className="absolute top-full left-0 mt-4 bg-white shadow-2xl rounded-2xl border border-gray-100 overflow-hidden flex flex-col font-sans z-[60]"
-                                            style={{ minWidth: '350px' }} // Adjusted width for single/double calendar
+                                            className="absolute top-full left-0 mt-4 bg-zinc-900 shadow-2xl rounded-2xl border border-zinc-800 overflow-hidden flex flex-col font-sans z-[60]"
+                                            style={{ minWidth: '660px' }}
                                         >
-                                            <div className="p-4 flex justify-center">
+                                            <div className="p-6 flex justify-center">
                                                 <Calendar
                                                     mode="range"
                                                     defaultMonth={tempStartDate || new Date()}
@@ -331,11 +331,31 @@ const HeroSearch = () => {
                                                     }}
                                                     numberOfMonths={2}
                                                     initialFocus
+                                                    classNames={{
+                                                        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-8 sm:space-y-0",
+                                                        month: "space-y-4",
+                                                        caption: "flex justify-center pt-1 relative items-center text-white",
+                                                        caption_label: "text-base font-bold",
+                                                        nav: "space-x-1 flex items-center",
+                                                        nav_button: "h-8 w-8 bg-zinc-800 text-white p-0 hover:bg-zinc-700 rounded-lg transition-colors flex items-center justify-center",
+                                                        table: "w-full border-collapse space-y-1",
+                                                        head_row: "flex mb-2",
+                                                        head_cell: "text-zinc-500 rounded-md w-10 font-medium text-[0.875rem]",
+                                                        row: "flex w-full mt-2",
+                                                        cell: "h-10 w-10 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-full [&:has([aria-selected].day-range-start)]:rounded-l-full [&:has([aria-selected].day-outside)]:bg-zinc-800/50 [&:has([aria-selected])]:bg-zinc-800 first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-full focus-within:relative focus-within:z-20",
+                                                        day: "h-10 w-10 p-0 font-medium text-zinc-400 hover:bg-zinc-800 hover:text-white rounded-full transition-all flex items-center justify-center cursor-pointer data-[selected]:bg-white data-[selected]:text-black",
+                                                        day_selected: "bg-white text-black hover:bg-gray-100 hover:text-black focus:bg-white focus:text-black font-bold",
+                                                        day_today: "bg-zinc-800 text-white font-bold",
+                                                        day_outside: "text-zinc-700 opacity-50",
+                                                        day_disabled: "text-zinc-800 opacity-50",
+                                                        day_range_middle: "aria-selected:bg-zinc-800 aria-selected:text-white rounded-none",
+                                                        day_hidden: "invisible",
+                                                    }}
                                                 />
                                             </div>
 
                                             {/* Footer: Done Button */}
-                                            <div className="flex items-center justify-end px-6 py-4 border-t border-gray-100 bg-white">
+                                            <div className="flex items-center justify-end px-6 py-4 border-t border-zinc-800 bg-zinc-900">
                                                 <button
                                                     type="button"
                                                     disabled={!tempStartDate || !tempEndDate}
@@ -352,8 +372,8 @@ const HeroSearch = () => {
                                                         }
                                                     }}
                                                     className={`px-8 py-2.5 font-bold rounded-full text-sm transition-all shadow-md ${(!tempStartDate || !tempEndDate)
-                                                        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                                        : 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg transform active:scale-95'
+                                                        ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                                                        : 'bg-white text-black hover:bg-gray-200 hover:shadow-lg transform active:scale-95'
                                                         }`}
                                                 >
                                                     Done
