@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { hotelData } from '../mocks/hotelData';
+// import { hotelData } from '../mocks/hotelData'; // Removed mock
 
 // Components
 import HotelHero from '../components/Hotel/HotelHero';
@@ -19,16 +19,39 @@ const HotelDetails = () => {
     const { id } = useParams();
     const [hotel, setHotel] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Simulate API fetch with local mock data
-        const foundHotel = hotelData.find(h => h.id === parseInt(id)) || hotelData[0]; // Fallback to first if not found for demo
-        setHotel(foundHotel);
-        setLoading(false);
+        const fetchHotel = async () => {
+            try {
+                // Auto-detect environment
+                const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+                const apiUrl = import.meta.env.VITE_API_URL || (isLocal ? 'http://localhost:8000' : 'https://getmyhotels-com.onrender.com');
+
+                const response = await fetch(`${apiUrl}/hotels/${id}`);
+                if (!response.ok) throw new Error('Failed to fetch hotel details');
+
+                const data = await response.json();
+                setHotel(data);
+            } catch (err) {
+                console.error(err);
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (id) {
+            fetchHotel();
+        }
     }, [id]);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-    if (!hotel) return <div className="min-h-screen flex items-center justify-center">Hotel not found</div>;
+    if (loading) return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+    );
+    if (error || !hotel) return <div className="min-h-screen flex items-center justify-center text-red-500">Error: {error || 'Hotel not found'}</div>;
 
     return (
         <div className="min-h-screen bg-white">
@@ -48,7 +71,7 @@ const HotelDetails = () => {
                         <div className="mb-10">
                             <h2 className="text-2xl font-bold text-gray-900 mb-4">About the stay</h2>
                             <p className="text-lg text-gray-700 leading-relaxed mb-4">
-                                {hotel.longDescription || hotel.description}
+                                {hotel.long_description || hotel.description}
                             </p>
 
                         </div>
@@ -77,8 +100,8 @@ const HotelDetails = () => {
                         {/* 9. Reviews */}
                         <ReviewsSection
                             rating={hotel.rating}
-                            count={hotel.reviewsCount}
-                            distribution={hotel.reviewDistribution}
+                            count={hotel.reviewsCount || 0}
+                            distribution={hotel.reviewDistribution || { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }}
                         />
 
                         {/* 10. Map & Nearby (Simple Embed for Demo) */}
@@ -93,7 +116,7 @@ const HotelDetails = () => {
                                     scrolling="no"
                                     marginHeight="0"
                                     marginWidth="0"
-                                    src={`https://maps.google.com/maps?q=${hotel.coordinates?.lat},${hotel.coordinates?.lng}&hl=es;z=14&output=embed`}
+                                    src={`https://maps.google.com/maps?q=${hotel.location}&hl=es;z=14&output=embed`}
                                 ></iframe>
                                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur p-4 rounded-xl shadow-lg max-w-xs border border-gray-200">
                                     <h4 className="font-bold mb-3 text-gray-900 flex items-center">

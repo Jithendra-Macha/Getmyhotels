@@ -195,11 +195,66 @@ def search_hotels_endpoint(
     return results
 
 @app.get("/hotels/{hotel_id}", response_model=schemas.HotelDetail)
-def get_hotel_details(hotel_id: int, db: Session = Depends(get_db)):
-    hotel = db.query(models.Hotel).filter(models.Hotel.id == hotel_id).first()
-    if not hotel:
-        raise HTTPException(status_code=404, detail="Hotel not found")
-    return hotel
+def get_hotel_details(hotel_id: str, db: Session = Depends(get_db)):
+    # Check if ID is likely from Local DB (numeric)
+    if hotel_id.isdigit():
+        hotel = db.query(models.Hotel).filter(models.Hotel.id == int(hotel_id)).first()
+        if not hotel:
+            raise HTTPException(status_code=404, detail="Hotel not found in Local DB")
+        # Enhance local hotel with some mock details if missing
+        return schemas.HotelDetail(
+            id=hotel.id,
+            name=hotel.name,
+            location=hotel.location,
+            description=hotel.description,
+            rating=hotel.rating,
+            image_url=hotel.image_url,
+            price_per_night=hotel.price_per_night,
+            long_description=hotel.description * 3, # Mock long desc
+            amenities=["Free WiFi", "Parking", "Pool", "Gym"],
+            images=[hotel.image_url, "https://via.placeholder.com/800x600"],
+            rooms=[] # Mock rooms or fetch from relation
+        )
+
+    # Otherwise, try Xeni API
+    from xeni_client import xeni_client
+    print(f"DEBUG: Fetching details for Xeni Hotel ID: {hotel_id}", flush=True)
+    xeni_data = xeni_client.get_hotel_details(hotel_id)
+    
+    if xeni_data and xeni_data.get('data'):
+        prop = xeni_data.get('data', {}).get('property', {}) or xeni_data.get('data', {})
+        
+        # Map Xeni to Schema
+        return schemas.HotelDetail(
+            id=0, # Use hash or handle string ID in schema if needed (or keep 0 for simplified view)
+            # Schema expects int ID currently, which is a limitation. 
+            # ideally we update Hotel schema to allow str ID.
+            # providing 0 for now to satisfy int validation if possible, or we need to update HotelBase ID type.
+            # Actually, `id` in Hotel schema is int. We should probably update that too or map hash.
+            # Let's map a fake INT id for now to pass validation, or strictly modify schema to allow str.
+            # Modifying schema to allow str ID is better long term.
+            name=prop.get('name', 'Unknown Hotel'),
+            location=prop.get('address', {}).get('address_line_1', 'Unknown Address'),
+            description=prop.get('overview', {}).get('description', 'No description'),
+            rating=float(prop.get('rating', 0)),
+            image_url=prop.get('images', [{}])[0].get('url', ""),
+            price_per_night=float(prop.get('rate', {}).get('price', 0) if prop.get('rate') else 0),
+            long_description=prop.get('overview', {}).get('description', ''),
+            amenities=[a.get('name') for a in prop.get('amenities', [])[:10]],
+            images=[img.get('url') for img in prop.get('images', [])[:5]],
+            rooms=[
+                schemas.Room(
+                    id=i, 
+                    hotel_id=0, 
+                    name=r.get('name', 'Standard Room'), 
+                    capacity=2, 
+                    price=float(r.get('rate', {}).get('price', 0)), 
+                    available=True
+                ) for i, r in enumerate(prop.get('rooms', [])[:5], start=1)
+            ]
+        )
+            
+    raise HTTPException(status_code=404, detail="Hotel not found in Xeni API")
 
 @app.post("/bookings", response_model=schemas.Booking)
 def create_booking(booking: schemas.BookingCreate, db: Session = Depends(get_db)):

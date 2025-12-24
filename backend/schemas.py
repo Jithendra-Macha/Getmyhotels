@@ -42,8 +42,12 @@ class HotelBase(BaseModel):
 class HotelCreate(HotelBase):
     pass
 
+from typing import List, Optional, Union
+
+# ... (lines 1-44)
+
 class Hotel(HotelBase):
-    id: int
+    id: Union[int, str]
     
     class Config:
         orm_mode = True
@@ -58,8 +62,8 @@ class RoomCreate(RoomBase):
     pass
 
 class Room(RoomBase):
-    id: int
-    hotel_id: int
+    id: Union[int, str]
+    hotel_id: Union[int, str]
 
     class Config:
         orm_mode = True
@@ -90,6 +94,9 @@ class Booking(BookingBase):
         orm_mode = True
 
 class HotelDetail(Hotel):
+    long_description: Optional[str] = None
+    amenities: List[str] = []
+    images: List[str] = []
     rooms: List[Room] = []
 
 class AIPlanRequest(BaseModel):
